@@ -1,0 +1,153 @@
+{
+  "currentUser": null,
+  "users": [
+    {
+      "id": 1,
+      "username": "admin",
+      "password": "password123",
+      "name": "Sarah Jenkins",
+      "role": "admin",
+      "bio": "System Administrator"
+    },
+    {
+      "id": 2,
+      "username": "elson",
+      "password": "password123",
+      "name": "Elson Ooi",
+      "role": "mentee",
+      "bio": "CS Student looking for AI guidance",
+      "skills": ["Java", "React", "Python"],
+      "goals": "Become an AI Engineer"
+    },
+    {
+      "id": 3,
+      "username": "alice",
+      "password": "password123",
+      "name": "Dr. Alice Wong",
+      "role": "mentor",
+      "industry": "Marketing",
+      "skills": ["Digital Strategy", "Branding"],
+      "experience": "10 Years at Top Firm",
+      "bio": "Helping women lead in business.",
+      "availability": ["Mon", "Wed"],
+      "isApproved": true
+    },
+    {
+      "id": 4,
+      "username": "jessica",
+      "password": "password123",
+      "name": "Jessica Tan",
+      "role": "entrepreneur",
+      "shopName": "Jessica's Crafts",
+      "shopDescription": "Handmade with love.",
+      "bio": "Artisan crafter."
+    },
+    {
+      "id": 5,
+      "username": "new_mentor",
+      "password": "password123",
+      "name": "Jane Tech",
+      "role": "mentor",
+      "industry": "Technology",
+      "isApproved": false,
+      "bio": "Waiting for admin approval."
+    }
+  ],
+  "categories": ["Business", "Technology", "Leadership", "Marketing"],
+  "courses": [
+    {
+      "id": 101,
+      "title": "Leadership 101 for Women",
+      "category": "Leadership",
+      "instructor": "Dr. Sarah Lee",
+      "description": "Master the art of leading teams.",
+      "image": "https://placehold.co/600x400/4E56C0/FFFFFF?text=Leadership",
+      "reviews": [
+        { "user": "Elson Ooi", "rating": 5, "comment": "Great course!" }
+      ]
+    },
+    {
+      "id": 102,
+      "title": "Intro to Web Development",
+      "category": "Technology",
+      "instructor": "Jane Doe",
+      "description": "HTML, CSS, and React basics.",
+      "image": "https://placehold.co/600x400/9B5DE0/FFFFFF?text=Coding",
+      "reviews": []
+    }
+  ],
+  "enrollments": [],
+  "mentorship_requests": [
+    { "id": 1, "mentorId": 3, "menteeId": 2, "status": "connected" }
+  ],
+  "messages": [
+    { "id": 1, "senderId": 2, "receiverId": 3, "text": "Hi Dr. Alice, thanks for connecting!", "timestamp": "2025-12-01T10:00:00" },
+    { "id": 2, "senderId": 3, "receiverId": 2, "text": "Glad to help, Elson!", "timestamp": "2025-12-01T10:05:00" }
+  ],
+  "meetings": [
+    { 
+      "id": 1, 
+      "mentorId": 3, 
+      "menteeId": 2, 
+      "date": "2025-12-10", 
+      "time": "14:00", 
+      "status": "scheduled", 
+      "link": "zoom.us/j/123" 
+    }
+  ],
+  "feedbacks": [],
+  "products": [
+    {
+      "id": 301,
+      "name": "Handwoven Scarf",
+      "category": "Handmade Goods",
+      "price": 45.00,
+      "sellerId": 4,
+      "sellerName": "Jessica's Crafts",
+      "image": "https://placehold.co/300x300/FDCFFA/4E56C0?text=Scarf",
+      "reviews": [],
+      "isBanned": false
+    }
+  ],
+  "orders": [
+    { 
+      "id": 501, 
+      "buyerId": 2, 
+      "productId": 301, 
+      "status": "shipped", 
+      "date": "2025-11-20" 
+    }
+  ],
+  "forum_posts": [
+    {
+      "id": 401,
+      "title": "How to handle workplace bias?",
+      "category": "Career Advice",
+      "authorId": 2,
+      "authorName": "Elson Ooi",
+      "content": "I recently started a new job...",
+      "likes": 5,
+      "isFlagged": false,
+      "replies": [
+        { "id": 1, "authorName": "Dr. Alice Wong", "content": "Document everything." }
+      ]
+    },
+    {
+      "id": 402,
+      "title": "Spam Link!",
+      "category": "General",
+      "authorId": 99,
+      "authorName": "SpamBot",
+      "content": "Click here for money",
+      "likes": 0,
+      "isFlagged": true,
+      "replies": []
+    }
+  ],
+  "notifications": [
+    { "id": 1, "userId": 2, "text": "Dr. Alice accepted your mentorship request.", "read": false }
+  ],
+  "announcements": [
+    { "id": 1, "text": "Welcome to Wonder Women! Please read our guidelines.", "date": "2025-10-01" }
+  ]
+}

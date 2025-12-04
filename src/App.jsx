@@ -9,6 +9,7 @@ import LearningHub from './pages/LearningHub';
 import MentorshipMatch from './pages/MentorshipMatch';
 import Marketplace from './pages/Marketplace';
 import CommunityForum from './pages/CommunityForum';
+import PrivacyPolicy from './pages/PrivacyPolicy';
 
 const ProtectedRoute = ({ children }) => {
   const { currentUser } = useAuth();
@@ -23,6 +24,7 @@ function App() {
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route
               path="/*"
               element={

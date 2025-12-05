@@ -106,7 +106,86 @@
       "sellerName": "Jessica's Crafts",
       "image": "https://placehold.co/300x300/FDCFFA/4E56C0?text=Scarf",
       "reviews": [],
-      "isBanned": false
+      "isBanned": false,
+      "isSuspended": false
+    },
+    {
+      "id": 302,
+      "name": "Organic Granola Gift Box",
+      "category": "Food",
+      "price": 32.50,
+      "sellerId": 4,
+      "sellerName": "Jessica's Crafts",
+      "image": "https://placehold.co/300x300/F6D186/4E56C0?text=Granola",
+      "description": "Small-batch granola with cranberries, almonds, and honey.",
+      "reviews": [],
+      "isBanned": false,
+      "isSuspended": false
+    },
+    {
+      "id": 303,
+      "name": "Custom Logo Tote",
+      "category": "Handmade Goods",
+      "price": 28.00,
+      "sellerId": 4,
+      "sellerName": "Jessica's Crafts",
+      "image": "https://placehold.co/300x300/C7F0BD/4E56C0?text=Tote",
+      "description": "Canvas tote with personalized logo or slogan print.",
+      "reviews": [],
+      "isBanned": false,
+      "isSuspended": false
+    },
+    {
+      "id": 304,
+      "name": "Branding Consult (30 min)",
+      "category": "Services",
+      "price": 60.00,
+      "sellerId": 4,
+      "sellerName": "Jessica's Crafts",
+      "image": "https://placehold.co/300x300/FFE4E1/4E56C0?text=Consult",
+      "description": "Short consultation to align your brand voice and visuals.",
+      "reviews": [],
+      "isBanned": false,
+      "isSuspended": false
+    },
+    {
+      "id": 305,
+      "name": "Eco Candle Trio",
+      "category": "Handmade Goods",
+      "price": 24.00,
+      "sellerId": 4,
+      "sellerName": "Jessica's Crafts",
+      "image": "https://placehold.co/300x300/F7E7CE/4E56C0?text=Candles",
+      "description": "Set of three soy candles with lavender, citrus, and cedar scents.",
+      "reviews": [],
+      "isBanned": false,
+      "isSuspended": false
+    },
+    {
+      "id": 306,
+      "name": "Wellness Snack Sampler",
+      "category": "Food",
+      "price": 18.50,
+      "sellerId": 4,
+      "sellerName": "Jessica's Crafts",
+      "image": "https://placehold.co/300x300/FFE8A3/4E56C0?text=Snacks",
+      "description": "Mixed box of dried fruits, nut clusters, and dark chocolate bites.",
+      "reviews": [],
+      "isBanned": false,
+      "isSuspended": false
+    },
+    {
+      "id": 307,
+      "name": "Mini Website Audit",
+      "category": "Services",
+      "price": 85.00,
+      "sellerId": 4,
+      "sellerName": "Jessica's Crafts",
+      "image": "https://placehold.co/300x300/E0F2FF/4E56C0?text=Audit",
+      "description": "30-point review of homepage, product pages, and checkout flow.",
+      "reviews": [],
+      "isBanned": false,
+      "isSuspended": false
     }
   ],
   "orders": [

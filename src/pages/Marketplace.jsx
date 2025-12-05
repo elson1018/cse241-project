@@ -138,7 +138,14 @@ const Marketplace = () => {
 
     updateData('products', [...products, product]);
     setShowAddModal(false);
-    setNewProduct({ name: '', category: 'Handmade Goods', price: '', image: '', description: '' });
+    setNewProduct({
+      name: '',
+      category: 'Handmade Goods',
+      price: '',
+      image: '',
+      description: '',
+      isSuspended: false
+    });
     setToast({ message: 'Product added successfully!', type: 'success' });
   };
 
@@ -176,7 +183,14 @@ const Marketplace = () => {
     updateData('products', updatedProducts);
     setShowAddModal(false);
     setSelectedProduct(null);
-    setNewProduct({ name: '', category: 'Handmade Goods', price: '', image: '', description: '' });
+    setNewProduct({
+      name: '',
+      category: 'Handmade Goods',
+      price: '',
+      image: '',
+      description: '',
+      isSuspended: false
+    });
     setToast({ message: 'Product updated successfully!', type: 'success' });
   };
 
@@ -714,7 +728,14 @@ const Marketplace = () => {
         onClose={() => {
           setShowAddModal(false);
           setSelectedProduct(null);
-          setNewProduct({ name: '', category: 'Handmade Goods', price: '', image: '', description: '' });
+          setNewProduct({
+            name: '',
+            category: 'Handmade Goods',
+            price: '',
+            image: '',
+            description: '',
+            isSuspended: false
+          });
         }}
         title={selectedProduct ? 'Edit Product' : 'Add New Product'}
       >

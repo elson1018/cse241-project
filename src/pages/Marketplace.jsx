@@ -33,7 +33,8 @@ const Marketplace = () => {
     category: 'Handmade Goods',
     price: '',
     image: '',
-    description: ''
+    description: '',
+    isSuspended: false
   });
   const [storefrontData, setStorefrontData] = useState({
     shopName: currentUser?.shopName || '',
@@ -60,7 +61,7 @@ const Marketplace = () => {
       (product.description || '').toLowerCase().includes(searchQuery.toLowerCase());
 
     if (activeTab === 'storefront' && canUseEntrepreneurTools) {
-      if (product.isBanned) return false;
+      if (product.isBanned || product.isSuspended) return false;
       return (
         product.sellerId === currentUser.id &&
         matchesCategory &&
@@ -69,6 +70,7 @@ const Marketplace = () => {
     }
 
     if (product.isBanned) return false;
+    if (!isAdmin && product.isSuspended) return false;
     return matchesCategory && matchesSearch;
   });
 
@@ -189,6 +191,22 @@ const Marketplace = () => {
     );
     updateData('products', updatedProducts);
     setToast({ message: 'Product banned', type: 'info' });
+  };
+
+  const handleSuspendProduct = (productId) => {
+    const updatedProducts = products.map(p =>
+      p.id === productId ? { ...p, isSuspended: true } : p
+    );
+    updateData('products', updatedProducts);
+    setToast({ message: 'Product suspended', type: 'info' });
+  };
+
+  const handleUnsuspendProduct = (productId) => {
+    const updatedProducts = products.map(p =>
+      p.id === productId ? { ...p, isSuspended: false } : p
+    );
+    updateData('products', updatedProducts);
+    setToast({ message: 'Product unsuspended', type: 'success' });
   };
 
   const handleUpdateStorefront = () => {
@@ -494,13 +512,32 @@ const Marketplace = () => {
                         </>
                       )}
                     {isAdmin && !product.isBanned && (
-                      <Button
-                        variant="danger"
-                        onClick={() => handleBanProduct(product.id)}
-                      >
-                        <Ban size={18} className="inline mr-1" />
-                        Ban
-                      </Button>
+                      <>
+                        {!product.isSuspended ? (
+                          <Button
+                            variant="secondary"
+                            onClick={() => handleSuspendProduct(product.id)}
+                          >
+                            <Ban size={18} className="inline mr-1" />
+                            Suspend
+                          </Button>
+                        ) : (
+                          <Button
+                            variant="secondary"
+                            onClick={() => handleUnsuspendProduct(product.id)}
+                          >
+                            <Ban size={18} className="inline mr-1" />
+                            Unsuspend
+                          </Button>
+                        )}
+                        <Button
+                          variant="danger"
+                          onClick={() => handleBanProduct(product.id)}
+                        >
+                          <Ban size={18} className="inline mr-1" />
+                          Ban
+                        </Button>
+                      </>
                     )}
                   </div>
                 </Card>

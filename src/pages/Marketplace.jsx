@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import Card from '../components/Card';
 import Button from '../components/Button';
@@ -9,8 +9,19 @@ import { ShoppingCart, Plus, Edit, Trash2, Ban, Search, Star, Store, Settings } 
 
 const Marketplace = () => {
   const { currentUser, appData, updateData } = useAuth();
-  const [activeTab, setActiveTab] = useState('browse');
+  const isAdmin = currentUser.role === 'admin';
+  const isEntrepreneur = currentUser.role === 'entrepreneur';
+  const [selfPromoted, setSelfPromoted] = useState(false);
+  const canUseEntrepreneurTools = isEntrepreneur || selfPromoted;
+
+  const [roleView, setRoleView] = useState(
+    isEntrepreneur ? 'entrepreneur' : 'user'
+  );
+  const [activeTab, setActiveTab] = useState(
+    isEntrepreneur ? 'storefront' : 'browse'
+  );
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('All');
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showStorefrontModal, setShowStorefrontModal] = useState(false);
@@ -22,7 +33,8 @@ const Marketplace = () => {
     category: 'Handmade Goods',
     price: '',
     image: '',
-    description: ''
+    description: '',
+    isSuspended: false
   });
   const [storefrontData, setStorefrontData] = useState({
     shopName: currentUser?.shopName || '',
@@ -34,16 +46,32 @@ const Marketplace = () => {
   const products = appData.products || [];
   const orders = appData.orders || [];
 
+  const categories = useMemo(
+    () => ['All', ...new Set(products.map((p) => p.category))],
+    [products]
+  );
+
   // Filter products
-  const filteredProducts = products.filter(product => {
-    if (activeTab === 'storefront' && currentUser.role === 'entrepreneur') {
-      return product.sellerId === currentUser.id && !product.isBanned;
+  const filteredProducts = products.filter((product) => {
+    const matchesCategory =
+      selectedCategory === 'All' || product.category === selectedCategory;
+    const matchesSearch =
+      product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (product.description || '').toLowerCase().includes(searchQuery.toLowerCase());
+
+    if (activeTab === 'storefront' && canUseEntrepreneurTools) {
+      if (product.isBanned || product.isSuspended) return false;
+      return (
+        product.sellerId === currentUser.id &&
+        matchesCategory &&
+        matchesSearch
+      );
     }
+
     if (product.isBanned) return false;
-    const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          product.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          (product.description || '').toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesSearch;
+    if (!isAdmin && product.isSuspended) return false;
+    return matchesCategory && matchesSearch;
   });
 
   // Get user's orders
@@ -54,11 +82,21 @@ const Marketplace = () => {
   });
 
   const handleBuyNow = (product) => {
+    if (isAdmin) {
+      setToast({ message: 'Administrators can browse only and cannot purchase.', type: 'info' });
+      return;
+    }
     setSelectedProduct(product);
     setShowPurchaseModal(true);
   };
 
   const handleConfirmPurchase = () => {
+    if (isAdmin) {
+      setToast({ message: 'Administrators cannot complete purchases.', type: 'error' });
+      setShowPurchaseModal(false);
+      return;
+    }
+
     const newOrder = {
       id: Date.now(),
       buyerId: currentUser.id,
@@ -100,7 +138,14 @@ const Marketplace = () => {
 
     updateData('products', [...products, product]);
     setShowAddModal(false);
-    setNewProduct({ name: '', category: 'Handmade Goods', price: '', image: '', description: '' });
+    setNewProduct({
+      name: '',
+      category: 'Handmade Goods',
+      price: '',
+      image: '',
+      description: '',
+      isSuspended: false
+    });
     setToast({ message: 'Product added successfully!', type: 'success' });
   };
 
@@ -138,7 +183,14 @@ const Marketplace = () => {
     updateData('products', updatedProducts);
     setShowAddModal(false);
     setSelectedProduct(null);
-    setNewProduct({ name: '', category: 'Handmade Goods', price: '', image: '', description: '' });
+    setNewProduct({
+      name: '',
+      category: 'Handmade Goods',
+      price: '',
+      image: '',
+      description: '',
+      isSuspended: false
+    });
     setToast({ message: 'Product updated successfully!', type: 'success' });
   };
 
@@ -153,6 +205,22 @@ const Marketplace = () => {
     );
     updateData('products', updatedProducts);
     setToast({ message: 'Product banned', type: 'info' });
+  };
+
+  const handleSuspendProduct = (productId) => {
+    const updatedProducts = products.map(p =>
+      p.id === productId ? { ...p, isSuspended: true } : p
+    );
+    updateData('products', updatedProducts);
+    setToast({ message: 'Product suspended', type: 'info' });
+  };
+
+  const handleUnsuspendProduct = (productId) => {
+    const updatedProducts = products.map(p =>
+      p.id === productId ? { ...p, isSuspended: false } : p
+    );
+    updateData('products', updatedProducts);
+    setToast({ message: 'Product unsuspended', type: 'success' });
   };
 
   const handleUpdateStorefront = () => {
@@ -223,7 +291,7 @@ const Marketplace = () => {
             <h1 className="text-4xl font-bold text-primary mb-2">Marketplace</h1>
             <p className="text-text-main">Support women entrepreneurs and discover unique products</p>
           </div>
-          <RoleWrapper allowedRoles={['entrepreneur']}>
+          {canUseEntrepreneurTools && (
             <div className="flex gap-2">
               <Button onClick={() => {
                 setStorefrontData({
@@ -245,66 +313,139 @@ const Marketplace = () => {
                 Add Product
               </Button>
             </div>
-          </RoleWrapper>
+          )}
         </div>
+
+        {!isAdmin && (
+          <div className="mb-4 flex flex-wrap items-center gap-3">
+            <span className="text-sm font-semibold text-text-main">View as:</span>
+            <button
+              onClick={() => {
+                setRoleView('user');
+                setActiveTab('browse');
+              }}
+              className={`text-sm font-semibold underline-offset-4 ${
+                roleView === 'user' ? 'text-primary underline' : 'text-text-main hover:text-primary'
+              }`}
+            >
+              User
+            </button>
+            <button
+              onClick={() => {
+                if (!canUseEntrepreneurTools) return;
+                setRoleView('entrepreneur');
+                setActiveTab('storefront');
+              }}
+              className={`text-sm font-semibold underline-offset-4 ${
+                roleView === 'entrepreneur'
+                  ? 'text-primary underline'
+                  : canUseEntrepreneurTools
+                    ? 'text-text-main hover:text-primary'
+                    : 'text-gray-400 cursor-not-allowed'
+              }`}
+              title={canUseEntrepreneurTools ? 'Switch to entrepreneur tools' : 'Become an entrepreneur to manage storefront'}
+            >
+              Entrepreneur
+            </button>
+            {!canUseEntrepreneurTools && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  setSelfPromoted(true);
+                  setRoleView('entrepreneur');
+                  setActiveTab('storefront');
+                }}
+              >
+                Become an Entrepreneur
+              </Button>
+            )}
+          </div>
+        )}
 
         <div className="flex gap-2 mb-6 border-b border-accent">
-          <button
-            onClick={() => setActiveTab('browse')}
-            className={`px-6 py-3 font-semibold transition-colors border-b-2 ${
-              activeTab === 'browse'
-                ? 'border-primary text-primary'
-                : 'border-transparent text-text-main hover:text-primary'
-            }`}
-          >
-            Browse Products
-          </button>
-          <RoleWrapper allowedRoles={['entrepreneur']}>
-            <button
-              onClick={() => setActiveTab('storefront')}
-              className={`px-6 py-3 font-semibold transition-colors border-b-2 ${
-                activeTab === 'storefront'
-                  ? 'border-primary text-primary'
-                  : 'border-transparent text-text-main hover:text-primary'
-              }`}
-            >
-              My Storefront
-            </button>
-            <button
-              onClick={() => setActiveTab('orders')}
-              className={`px-6 py-3 font-semibold transition-colors border-b-2 ${
-                activeTab === 'orders'
-                  ? 'border-primary text-primary'
-                  : 'border-transparent text-text-main hover:text-primary'
-              }`}
-            >
-              My Orders ({entrepreneurOrders.length})
-            </button>
-          </RoleWrapper>
-          <button
-            onClick={() => setActiveTab('myOrders')}
-            className={`px-6 py-3 font-semibold transition-colors border-b-2 ${
-              activeTab === 'myOrders'
-                ? 'border-primary text-primary'
-                : 'border-transparent text-text-main hover:text-primary'
-            }`}
-          >
-            My Purchases ({userOrders.length})
-          </button>
+          {roleView === 'user' && (
+            <>
+              <button
+                onClick={() => setActiveTab('browse')}
+                className={`px-6 py-3 font-semibold transition-colors border-b-2 ${
+                  activeTab === 'browse'
+                    ? 'border-primary text-primary'
+                    : 'border-transparent text-text-main hover:text-primary'
+                }`}
+              >
+                Browse Products
+              </button>
+              {!isAdmin && (
+                <button
+                  onClick={() => setActiveTab('myOrders')}
+                  className={`px-6 py-3 font-semibold transition-colors border-b-2 ${
+                    activeTab === 'myOrders'
+                      ? 'border-primary text-primary'
+                      : 'border-transparent text-text-main hover:text-primary'
+                  }`}
+                >
+                  My Purchases ({userOrders.length})
+                </button>
+              )}
+            </>
+          )}
+
+          {roleView === 'entrepreneur' && canUseEntrepreneurTools && (
+            <>
+              <button
+                onClick={() => setActiveTab('storefront')}
+                className={`px-6 py-3 font-semibold transition-colors border-b-2 ${
+                  activeTab === 'storefront'
+                    ? 'border-primary text-primary'
+                    : 'border-transparent text-text-main hover:text-primary'
+                }`}
+              >
+                My Storefront
+              </button>
+              <button
+                onClick={() => setActiveTab('orders')}
+                className={`px-6 py-3 font-semibold transition-colors border-b-2 ${
+                  activeTab === 'orders'
+                    ? 'border-primary text-primary'
+                    : 'border-transparent text-text-main hover:text-primary'
+                }`}
+              >
+                My Orders ({entrepreneurOrders.length})
+              </button>
+            </>
+          )}
         </div>
 
-        {/* Search Bar */}
+        {/* Search Bar + Category Filter */}
         {activeTab === 'browse' && (
-          <div className="mb-6 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search products..."
-              className="w-full pl-10 pr-4 py-3 border-2 border-accent rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white"
-            />
-          </div>
+          <>
+            <div className="mb-4 relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search products..."
+                className="w-full pl-10 pr-4 py-3 border-2 border-accent rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white"
+              />
+            </div>
+            <div className="mb-6 flex gap-2 flex-wrap">
+              {categories.map((category) => (
+                <button
+                  key={category}
+                  onClick={() => setSelectedCategory(category)}
+                  className={`px-4 py-2 rounded-full border ${
+                    selectedCategory === category
+                      ? 'bg-primary text-white border-primary'
+                      : 'border-accent text-text-main hover:border-primary'
+                  } text-sm font-semibold transition-colors`}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
+          </>
         )}
 
         {/* Product Grid */}
@@ -344,7 +485,7 @@ const Marketplace = () => {
                   <p className="text-2xl font-bold text-primary mb-4">${product.price.toFixed(2)}</p>
 
                   <div className="flex gap-2 flex-wrap">
-                    {activeTab === 'browse' && (
+                    {activeTab === 'browse' && !isAdmin && (
                       <>
                         <Button
                           variant="primary"
@@ -368,8 +509,7 @@ const Marketplace = () => {
                         )}
                       </>
                     )}
-                    <RoleWrapper allowedRoles={['entrepreneur']}>
-                      {activeTab === 'storefront' && (
+                    {canUseEntrepreneurTools && activeTab === 'storefront' && (
                         <>
                           <Button
                             variant="secondary"
@@ -385,9 +525,25 @@ const Marketplace = () => {
                           </Button>
                         </>
                       )}
-                    </RoleWrapper>
-                    <RoleWrapper allowedRoles={['admin']}>
-                      {!product.isBanned && (
+                    {isAdmin && !product.isBanned && (
+                      <>
+                        {!product.isSuspended ? (
+                          <Button
+                            variant="secondary"
+                            onClick={() => handleSuspendProduct(product.id)}
+                          >
+                            <Ban size={18} className="inline mr-1" />
+                            Suspend
+                          </Button>
+                        ) : (
+                          <Button
+                            variant="secondary"
+                            onClick={() => handleUnsuspendProduct(product.id)}
+                          >
+                            <Ban size={18} className="inline mr-1" />
+                            Unsuspend
+                          </Button>
+                        )}
                         <Button
                           variant="danger"
                           onClick={() => handleBanProduct(product.id)}
@@ -395,8 +551,8 @@ const Marketplace = () => {
                           <Ban size={18} className="inline mr-1" />
                           Ban
                         </Button>
-                      )}
-                    </RoleWrapper>
+                      </>
+                    )}
                   </div>
                 </Card>
               );
@@ -405,7 +561,7 @@ const Marketplace = () => {
         )}
 
         {/* Orders Tab (Entrepreneur) */}
-        {activeTab === 'orders' && (
+        {activeTab === 'orders' && canUseEntrepreneurTools && (
           <div className="space-y-4">
             {entrepreneurOrders.length === 0 ? (
               <Card>
@@ -572,7 +728,14 @@ const Marketplace = () => {
         onClose={() => {
           setShowAddModal(false);
           setSelectedProduct(null);
-          setNewProduct({ name: '', category: 'Handmade Goods', price: '', image: '', description: '' });
+          setNewProduct({
+            name: '',
+            category: 'Handmade Goods',
+            price: '',
+            image: '',
+            description: '',
+            isSuspended: false
+          });
         }}
         title={selectedProduct ? 'Edit Product' : 'Add New Product'}
       >

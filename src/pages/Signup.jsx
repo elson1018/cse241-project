@@ -192,6 +192,30 @@ const Signup = () => {
               />
             </div>
 
+            <div className="flex items-start gap-3">
+              <input
+                type="checkbox"
+                id="agreement"
+                name="agreement"
+                checked={formData.agreement || false}
+                onChange={(e) =>
+                  setFormData({ ...formData, agreement: e.target.checked })
+                }
+                className="mt-1 w-5 h-5 border-2 border-accent rounded focus:ring-primary cursor-pointer"
+                required
+              />
+              <label htmlFor="agreement" className="text-sm text-text-main">
+                I have read and agree to the{' '}
+                <Link to="/privacy-policy" className="text-primary underline">
+                  Privacy Policy
+                </Link>{' '}
+                and {' '}
+                <Link to="/privacy-policy" className="text-primary underline">
+                  Terms of Use
+                </Link>
+              </label>
+            </div>
+
             <Button
               type="submit"
               variant="primary"

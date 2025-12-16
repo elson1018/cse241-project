@@ -138,7 +138,6 @@ const LearningHub = () => {
       }
       return course;
     });
-
     updateData('courses', updatedCourses);
     setShowReviewModal(false);
     setSelectedCourse(null);
@@ -162,6 +161,24 @@ const LearningHub = () => {
     }
     updateData('categories', (appData.categories || []).filter(c => c !== categoryName));
     setToast({ message: 'Category deleted!', type: 'success' });
+  };
+
+  const handleImageUpload = (e) => {
+  const file = e.target.files[0];
+    if (file) {
+      // Optional: Check file size (e.g., limit to 2MB to prevent lagging)
+      if (file.size > 2 * 1024 * 1024) {
+        setToast({ message: 'Image size should be less than 2MB', type: 'error' });
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        // The result is a Base64 string that acts exactly like a URL
+        setNewCourse({ ...newCourse, image: reader.result });
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const getAverageRating = (course) => {
@@ -390,16 +407,37 @@ const LearningHub = () => {
               placeholder="Course description"
             />
           </div>
+          
           <div>
-            <label className="block text-sm font-semibold text-text-main mb-2">Image URL</label>
+            <label className="block text-sm font-semibold text-text-main mb-2">Course Image</label>
+            
+            {/* File Input */}
             <input
-              type="text"
-              value={newCourse.image}
-              onChange={(e) => setNewCourse({ ...newCourse, image: e.target.value })}
-              className="w-full px-4 py-2 border border-accent rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-              placeholder="Enter image URL"
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+              className="w-full px-4 py-2 border border-accent rounded-lg focus:outline-none focus:ring-2 focus:ring-primary file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-opacity-90"
             />
+
+            {/* Preview the image if one is selected */}
+            {newCourse.image && (
+              <div className="mt-2">
+                <img 
+                  src={newCourse.image} 
+                  alt="Preview" 
+                  className="h-32 w-full object-cover rounded-lg border border-accent" 
+                />
+                <button 
+                  type="button"
+                  onClick={() => setNewCourse({ ...newCourse, image: '' })}
+                  className="text-red-500 text-sm mt-1 hover:underline"
+                >
+                  Remove Image
+                </button>
+              </div>
+            )}
           </div>
+
           <div className="flex gap-3 pt-4">
             <Button variant="primary" onClick={handleAddCourse} className="flex-1">Add Course</Button>
             <Button variant="outline" onClick={() => setShowAddModal(false)} className="flex-1">Cancel</Button>
@@ -453,15 +491,37 @@ const LearningHub = () => {
               className="w-full px-4 py-2 border border-accent rounded-lg focus:outline-none focus:ring-2 focus:ring-primary resize-none"
             />
           </div>
+
           <div>
-            <label className="block text-sm font-semibold text-text-main mb-2">Image URL</label>
+            <label className="block text-sm font-semibold text-text-main mb-2">Course Image</label>
+            
+            {/* File Input */}
             <input
-              type="text"
-              value={newCourse.image}
-              onChange={(e) => setNewCourse({ ...newCourse, image: e.target.value })}
-              className="w-full px-4 py-2 border border-accent rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+              className="w-full px-4 py-2 border border-accent rounded-lg focus:outline-none focus:ring-2 focus:ring-primary file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-opacity-90"
             />
+
+            {/* Preview the image if one is selected */}
+            {newCourse.image && (
+              <div className="mt-2">
+                <img 
+                  src={newCourse.image} 
+                  alt="Preview" 
+                  className="h-32 w-full object-cover rounded-lg border border-accent" 
+                />
+                <button 
+                  type="button"
+                  onClick={() => setNewCourse({ ...newCourse, image: '' })}
+                  className="text-red-500 text-sm mt-1 hover:underline"
+                >
+                  Remove Image
+                </button>
+              </div>
+            )}
           </div>
+
           <div className="flex gap-3 pt-4">
             <Button variant="primary" onClick={handleEditCourse} className="flex-1">Update Course</Button>
             <Button variant="outline" onClick={() => setShowEditModal(false)} className="flex-1">Cancel</Button>

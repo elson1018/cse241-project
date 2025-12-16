@@ -184,7 +184,6 @@ const Signup = () => {
                   className="w-full px-4 py-3 border-2 border-accent rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all pr-12"
                   placeholder="Confirm your password"
                 />
-
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}

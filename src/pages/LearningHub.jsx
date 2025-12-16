@@ -112,8 +112,11 @@ const LearningHub = () => {
   };
 
   const handleDeleteCourse = (courseId) => {
-    updateData('courses', courses.filter(course => course.id !== courseId));
-    setToast({ message: 'Course deleted', type: 'success' });
+    // Confirm deletion messgae
+    if (window.confirm('Are you sure you want to delete this course? This action cannot be undone.')) {
+        updateData('courses', courses.filter(course => course.id !== courseId));
+        setToast({ message: 'Course deleted', type: 'success' });
+    }
   };
 
   const handleSubmitReview = () => {
@@ -159,8 +162,13 @@ const LearningHub = () => {
       setToast({ message: 'Cannot delete category with existing courses', type: 'error' });
       return;
     }
-    updateData('categories', (appData.categories || []).filter(c => c !== categoryName));
-    setToast({ message: 'Category deleted!', type: 'success' });
+    // Delete category check
+    const isConfirmed = window.confirm(`Are you sure you want to delete the category "${categoryName}"? This action cannot be undone.`);
+    // Only delete the selected category if confirmed
+    if (isConfirmed){
+      updateData('categories', (appData.categories || []).filter(cat => cat !== categoryName));
+      setToast({ message: 'Category deleted!', type: 'success' });
+    }
   };
 
   const handleImageUpload = (e) => {
@@ -407,7 +415,7 @@ const LearningHub = () => {
               placeholder="Course description"
             />
           </div>
-          
+
           <div>
             <label className="block text-sm font-semibold text-text-main mb-2">Course Image</label>
             
@@ -416,7 +424,9 @@ const LearningHub = () => {
               type="file"
               accept="image/*"
               onChange={handleImageUpload}
-              className="w-full px-4 py-2 border border-accent rounded-lg focus:outline-none focus:ring-2 focus:ring-primary file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-opacity-90"
+              className="w-full px-4 py-2 border border-accent rounded-lg focus:outline-none focus:ring-2 focus:ring-primary 
+                        file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white 
+                        hover:file:bg-opacity-90"
             />
 
             {/* Preview the image if one is selected */}
@@ -425,12 +435,12 @@ const LearningHub = () => {
                 <img 
                   src={newCourse.image} 
                   alt="Preview" 
-                  className="h-32 w-full object-cover rounded-lg border border-accent" 
+                  className="h-64 w-full object-cover rounded-lg border border-accent" 
                 />
                 <button 
                   type="button"
                   onClick={() => setNewCourse({ ...newCourse, image: '' })}
-                  className="text-red-500 text-sm mt-1 hover:underline"
+                  className="text-red-500 font-semibold text-sm mt-1 hover:underline"
                 >
                   Remove Image
                 </button>
@@ -509,12 +519,12 @@ const LearningHub = () => {
                 <img 
                   src={newCourse.image} 
                   alt="Preview" 
-                  className="h-32 w-full object-cover rounded-lg border border-accent" 
+                  className="h-64 w-full object-cover rounded-lg border border-accent" 
                 />
                 <button 
                   type="button"
                   onClick={() => setNewCourse({ ...newCourse, image: '' })}
-                  className="text-red-500 text-sm mt-1 hover:underline"
+                  className="text-red-500 font-semibold text-sm mt-1 hover:underline"
                 >
                   Remove Image
                 </button>

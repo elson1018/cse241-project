@@ -4,7 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import Button from '../components/Button';
 import Card from '../components/Card';
 import Toast from '../components/Toast';
-import { UserPlus, Eye, EyeOff } from 'lucide-react';
+import { UserPlus, Eye, EyeOff, ChevronDown } from 'lucide-react';
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -121,18 +121,25 @@ const Signup = () => {
               <label htmlFor="role" className="block text-sm font-semibold text-text-main mb-2">
                 I am a
               </label>
-              <select
-                id="role"
-                name="role"
-                value={formData.role}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-3 border-2 border-accent rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-              >
-                <option value="mentee">Mentee</option>
-                <option value="mentor">Mentor</option>
-                <option value="entrepreneur">Entrepreneur</option>
-              </select>
+              <div className="relative">
+                <select
+                  id="role"
+                  name="role"
+                  value={formData.role}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-4 py-3 border-2 border-accent rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all appearance-none cursor-pointer"
+                >
+                  <option value="mentee">Mentee</option>
+                  <option value="mentor">Mentor</option>
+                  <option value="entrepreneur">Entrepreneur</option>
+                </select>
+                
+                {/* Custom Arrow Icon */}
+                <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none text-gray-500">
+                  <ChevronDown size={20} />
+                </div>
+              </div>
             </div>
 
             <div>
@@ -165,16 +172,27 @@ const Signup = () => {
               <label htmlFor="confirmPassword" className="block text-sm font-semibold text-text-main mb-2">
                 Confirm Password
               </label>
-              <input
-                id="confirmPassword"
-                name="confirmPassword"
-                type={showPassword ? 'text' : 'password'}
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-3 border-2 border-accent rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                placeholder="Confirm your password"
-              />
+
+              <div className="relative">
+                <input
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type={showPassword ? 'text' : 'password'}
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-4 py-3 border-2 border-accent rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all pr-12"
+                  placeholder="Confirm your password"
+                />
+
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-text-main transition-colors"
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
             </div>
 
             <div>

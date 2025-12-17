@@ -51,10 +51,15 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <Link to="/dashboard" className="flex items-center gap-2">
-            <span className="text-2xl font-bold text-burgundy">Wonder Women ✨</span>
+            <div class="flex items-center flex-nowrap gap-0">
+              <img src="/src/assets/logo.png" alt="Logo" class="w-24 h-24 flex-shrink-0" />
+              <span class="text-2xl font-bold text-burgundy whitespace-nowrap mr-4">
+                Wonder Women
+              </span>
+            </div>
           </Link>
 
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-4">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = location.pathname === item.path;

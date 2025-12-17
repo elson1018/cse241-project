@@ -297,14 +297,19 @@ const Marketplace = () => {
           </div>
           {canUseEntrepreneurTools && (
             <div className="flex gap-2">
-              <Button onClick={() => {
-                setStorefrontData({
-                  shopName: currentUser.shopName || '',
-                  shopDescription: currentUser.shopDescription || '',
-                  logo: ''
-                });
-                setShowStorefrontModal(true);
-              }} variant="outline">
+              <Button
+                onClick={() => {
+                  setStorefrontData({
+                    shopName: currentUser.shopName || '',
+                    shopDescription: currentUser.shopDescription || '',
+                    contactEmail: currentUser.contactEmail || '',
+                    contactPhone: currentUser.contactPhone || '',
+                    logo: ''
+                  });
+                  setShowStorefrontModal(true);
+                }}
+                variant="outline"
+              >
                 <Settings size={18} className="inline mr-2" />
                 Customize Storefront
               </Button>
@@ -877,6 +882,26 @@ const Marketplace = () => {
               rows={4}
               className="w-full px-4 py-2 border border-accent rounded-lg focus:outline-none focus:ring-2 focus:ring-primary resize-none"
               placeholder="Describe your shop..."
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-text-main mb-2">Contact Email</label>
+            <input
+              type="email"
+              value={storefrontData.contactEmail}
+              onChange={(e) => setStorefrontData({ ...storefrontData, contactEmail: e.target.value })}
+              className="w-full px-4 py-2 border border-accent rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              placeholder="you@example.com"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-text-main mb-2">Contact Phone</label>
+            <input
+              type="text"
+              value={storefrontData.contactPhone}
+              onChange={(e) => setStorefrontData({ ...storefrontData, contactPhone: e.target.value })}
+              className="w-full px-4 py-2 border border-accent rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              placeholder="+60 ..."
             />
           </div>
           <div>

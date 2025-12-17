@@ -31,6 +31,11 @@ export const AuthProvider = ({ children }) => {
     );
     
     if (user) {
+      // Check if user is banned
+      if (user.status === 'banned' || user.isBanned) {
+        return { success: false, error: 'Your account has been banned. Please contact support.' };
+      }
+      
       const userWithAvatar = {
         ...user,
         avatar: `https://placehold.co/100x100/4E56C0/FFFFFF?text=${user.name.charAt(0)}`
@@ -72,6 +77,12 @@ export const AuthProvider = ({ children }) => {
     }));
   };
 
+  const updateCurrentUser = (userData) => {
+    const updatedUser = { ...currentUser, ...userData };
+    setCurrentUser(updatedUser);
+    localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+  };
+
   const value = {
     currentUser,
     appData,
@@ -79,7 +90,8 @@ export const AuthProvider = ({ children }) => {
     signup,
     logout,
     updateData,
-    setAppData
+    setAppData,
+    updateCurrentUser
   };
 
   return (

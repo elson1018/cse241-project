@@ -12,14 +12,16 @@ const MentorshipMatch = () => {
   const [activeTab, setActiveTab] = useState('browse');
   const [searchIndustry, setSearchIndustry] = useState('');
   const [searchSkills, setSearchSkills] = useState('');
+  const [searchMenteeIndustry, setSearchMenteeIndustry] = useState('');
+  const [searchMenteeSkills, setSearchMenteeSkills] = useState('');
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showChatModal, setShowChatModal] = useState(false);
   const [showMeetingModal, setShowMeetingModal] = useState(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [chatMessage, setChatMessage] = useState('');
-  const [meetingForm, setMeetingForm] = useState({ date: '', time: '', link: '' });
-  const [feedbackForm, setFeedbackForm] = useState({ rating: 5, comment: '' });
+  const [meetingForm, setMeetingForm] = useState({ date: '', time: '', link: '', venue: '', meetingType: 'online' });
+  const [feedbackForm, setFeedbackForm] = useState({ rating: 5, comment: '', privateFeedback: '', isPublic: true });
   const [toast, setToast] = useState(null);
 
   const users = appData.users || [];
@@ -36,11 +38,24 @@ const MentorshipMatch = () => {
   const industries = ['All', ...new Set(mentors.map(m => m.industry).filter(Boolean))];
   const allSkills = [...new Set(mentors.flatMap(m => m.skills || []))];
 
+  // Get industries and skills from mentees
+  const menteeIndustries = ['All', ...new Set(mentees.map(m => m.industry).filter(Boolean))];
+  const menteeSkills = [...new Set(mentees.flatMap(m => m.skills || []))];
+
   // Filter mentors
   const filteredMentors = mentors.filter(mentor => {
     const matchesIndustry = !searchIndustry || searchIndustry === 'All' || mentor.industry === searchIndustry;
     const matchesSkills = !searchSkills || (mentor.skills || []).some(skill => 
       skill.toLowerCase().includes(searchSkills.toLowerCase())
+    );
+    return matchesIndustry && matchesSkills;
+  });
+
+  // Filter mentees
+  const filteredMentees = mentees.filter(mentee => {
+    const matchesIndustry = !searchMenteeIndustry || searchMenteeIndustry === 'All' || mentee.industry === searchMenteeIndustry;
+    const matchesSkills = !searchMenteeSkills || (mentee.skills || []).some(skill => 
+      skill.toLowerCase().includes(searchMenteeSkills.toLowerCase())
     );
     return matchesIndustry && matchesSkills;
   });
@@ -119,7 +134,8 @@ const MentorshipMatch = () => {
       senderId: currentUser.id,
       receiverId,
       text: chatMessage,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      status: 'sent' // TODO: Implement 'seen' status with websocket or polling mechanism
     };
 
     updateData('messages', [...messages, newMessage]);
@@ -143,24 +159,35 @@ const MentorshipMatch = () => {
       return;
     }
 
+    if (meetingForm.meetingType === 'online' && !meetingForm.link) {
+      setToast({ message: 'Please provide a meeting link for online meetings', type: 'error' });
+      return;
+    }
+    if (meetingForm.meetingType === 'physical' && !meetingForm.venue) {
+      setToast({ message: 'Please provide a venue for physical meetings', type: 'error' });
+      return;
+    }
+
     const newMeeting = {
       id: Date.now(),
       mentorId: selectedUser.role === 'mentor' ? selectedUser.id : currentUser.id,
       menteeId: selectedUser.role === 'mentee' ? selectedUser.id : currentUser.id,
       date: meetingForm.date,
       time: meetingForm.time,
-      link: meetingForm.link,
+      link: meetingForm.meetingType === 'online' ? meetingForm.link : '',
+      venue: meetingForm.meetingType === 'physical' ? meetingForm.venue : '',
+      meetingType: meetingForm.meetingType,
       status: 'scheduled'
     };
 
     updateData('meetings', [...meetings, newMeeting]);
     setShowMeetingModal(false);
-    setMeetingForm({ date: '', time: '', link: '' });
+    setMeetingForm({ date: '', time: '', link: '', venue: '', meetingType: 'online' });
     setToast({ message: 'Meeting scheduled!', type: 'success' });
   };
 
   const handleSubmitFeedback = () => {
-    if (!feedbackForm.comment) {
+    if (!feedbackForm.comment && !feedbackForm.privateFeedback) {
       setToast({ message: 'Please write feedback', type: 'error' });
       return;
     }
@@ -170,13 +197,15 @@ const MentorshipMatch = () => {
       mentorId: selectedUser.role === 'mentor' ? selectedUser.id : currentUser.id,
       menteeId: selectedUser.role === 'mentee' ? selectedUser.id : currentUser.id,
       rating: feedbackForm.rating,
-      comment: feedbackForm.comment,
+      comment: feedbackForm.comment || '',
+      privateFeedback: feedbackForm.privateFeedback || '',
+      isPublic: feedbackForm.isPublic,
       date: new Date().toISOString()
     };
 
     updateData('feedbacks', [...(feedbacks || []), newFeedback]);
     setShowFeedbackModal(false);
-    setFeedbackForm({ rating: 5, comment: '' });
+    setFeedbackForm({ rating: 5, comment: '', privateFeedback: '', isPublic: true });
     setToast({ message: 'Feedback submitted!', type: 'success' });
   };
 
@@ -214,6 +243,18 @@ const MentorshipMatch = () => {
           >
             Browse Mentors
           </button>
+          <RoleWrapper allowedRoles={['mentor', 'admin']}>
+            <button
+              onClick={() => setActiveTab('browseMentees')}
+              className={`px-6 py-3 font-semibold transition-colors border-b-2 ${
+                activeTab === 'browseMentees'
+                  ? 'border-primary text-primary'
+                  : 'border-transparent text-text-main hover:text-primary'
+              }`}
+            >
+              Browse Mentees
+            </button>
+          </RoleWrapper>
           <button
             onClick={() => setActiveTab('connections')}
             className={`px-6 py-3 font-semibold transition-colors border-b-2 ${
@@ -331,6 +372,91 @@ const MentorshipMatch = () => {
                 </Card>
               ))}
             </div>
+          </>
+        )}
+
+        {activeTab === 'browseMentees' && (
+          <>
+            <div className="mb-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                <select
+                  value={searchMenteeIndustry}
+                  onChange={(e) => setSearchMenteeIndustry(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2 border border-accent rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white"
+                >
+                  {menteeIndustries.map(industry => (
+                    <option key={industry} value={industry}>{industry}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                <input
+                  type="text"
+                  value={searchMenteeSkills}
+                  onChange={(e) => setSearchMenteeSkills(e.target.value)}
+                  placeholder="Search by skills..."
+                  className="w-full pl-10 pr-4 py-2 border border-accent rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredMentees.map((mentee) => (
+                <Card key={mentee.id}>
+                  <div className="flex items-center gap-4 mb-4">
+                    <img
+                      src={mentee.avatar || `https://placehold.co/150x150/4E56C0/FFFFFF?text=${mentee.name.charAt(0)}`}
+                      alt={mentee.name}
+                      className="w-16 h-16 rounded-full object-cover"
+                    />
+                    <div>
+                      <h3 className="text-xl font-bold text-primary">{mentee.name}</h3>
+                      {mentee.industry && (
+                        <p className="text-sm text-gray-600">{mentee.industry}</p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="mb-4">
+                    <p className="text-sm text-text-main mb-2">{mentee.bio}</p>
+                    {mentee.age && (
+                      <p className="text-xs text-gray-600 mb-2">Age: {mentee.age}</p>
+                    )}
+                    {mentee.goals && (
+                      <p className="text-xs text-gray-600 mb-2">Goals: {mentee.goals}</p>
+                    )}
+                    {mentee.experience && (
+                      <p className="text-xs text-gray-600">Experience: {mentee.experience}</p>
+                    )}
+                  </div>
+                  <div className="mb-4 flex flex-wrap gap-2">
+                    {(mentee.skills || []).map((skill, idx) => (
+                      <span key={idx} className="px-2 py-1 bg-accent bg-opacity-30 text-secondary rounded text-xs font-semibold">
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setSelectedUser(mentee);
+                        setShowProfileModal(true);
+                      }}
+                      className="flex-1"
+                    >
+                      View Profile
+                    </Button>
+                  </div>
+                </Card>
+              ))}
+            </div>
+            {filteredMentees.length === 0 && (
+              <div className="text-center py-12">
+                <p className="text-text-main text-lg">No mentees found matching your filters.</p>
+              </div>
+            )}
           </>
         )}
 
@@ -579,7 +705,7 @@ const MentorshipMatch = () => {
                   >
                     <p>{message.text}</p>
                     <p className={`text-xs mt-1 ${message.senderId === currentUser.id ? 'text-white opacity-80' : 'text-gray-500'}`}>
-                      {new Date(message.timestamp).toLocaleTimeString()}
+                      {new Date(message.timestamp).toLocaleString()}
                     </p>
                   </div>
                 </div>
@@ -617,6 +743,33 @@ const MentorshipMatch = () => {
       >
         <div className="space-y-4">
           <div>
+            <label className="block text-sm font-semibold text-text-main mb-2">Meeting Type</label>
+            <div className="flex gap-4">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="meetingType"
+                  value="online"
+                  checked={meetingForm.meetingType === 'online'}
+                  onChange={(e) => setMeetingForm({ ...meetingForm, meetingType: e.target.value, link: '', venue: '' })}
+                  className="w-4 h-4 text-primary focus:ring-primary"
+                />
+                <span className="text-text-main">Online</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="meetingType"
+                  value="physical"
+                  checked={meetingForm.meetingType === 'physical'}
+                  onChange={(e) => setMeetingForm({ ...meetingForm, meetingType: e.target.value, link: '', venue: '' })}
+                  className="w-4 h-4 text-primary focus:ring-primary"
+                />
+                <span className="text-text-main">Physical</span>
+              </label>
+            </div>
+          </div>
+          <div>
             <label className="block text-sm font-semibold text-text-main mb-2">Date</label>
             <input
               type="date"
@@ -635,16 +788,29 @@ const MentorshipMatch = () => {
               className="w-full px-4 py-2 border border-accent rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
-          <div>
-            <label className="block text-sm font-semibold text-text-main mb-2">Meeting Link (Optional)</label>
-            <input
-              type="text"
-              value={meetingForm.link}
-              onChange={(e) => setMeetingForm({ ...meetingForm, link: e.target.value })}
-              placeholder="zoom.us/j/123"
-              className="w-full px-4 py-2 border border-accent rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-            />
-          </div>
+          {meetingForm.meetingType === 'online' ? (
+            <div>
+              <label className="block text-sm font-semibold text-text-main mb-2">Meeting Link *</label>
+              <input
+                type="text"
+                value={meetingForm.link}
+                onChange={(e) => setMeetingForm({ ...meetingForm, link: e.target.value })}
+                placeholder="zoom.us/j/123"
+                className="w-full px-4 py-2 border border-accent rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+            </div>
+          ) : (
+            <div>
+              <label className="block text-sm font-semibold text-text-main mb-2">Venue/Location *</label>
+              <input
+                type="text"
+                value={meetingForm.venue}
+                onChange={(e) => setMeetingForm({ ...meetingForm, venue: e.target.value })}
+                placeholder="Enter meeting location"
+                className="w-full px-4 py-2 border border-accent rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+            </div>
+          )}
           <div className="flex gap-3 pt-4">
             <Button variant="primary" onClick={handleBookMeeting} className="flex-1">Book Meeting</Button>
             <Button variant="outline" onClick={() => setShowMeetingModal(false)} className="flex-1">Cancel</Button>
@@ -661,6 +827,7 @@ const MentorshipMatch = () => {
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-semibold text-text-main mb-2">Rating</label>
+            <p className="text-xs text-gray-600 mb-2">You can give stars to rate the mentor.</p>
             <div className="flex gap-2">
               {[1, 2, 3, 4, 5].map((star) => (
                 <button
@@ -678,13 +845,23 @@ const MentorshipMatch = () => {
             </div>
           </div>
           <div>
-            <label className="block text-sm font-semibold text-text-main mb-2">Comment</label>
+            <label className="block text-sm font-semibold text-text-main mb-2">Public Review</label>
             <textarea
               value={feedbackForm.comment}
               onChange={(e) => setFeedbackForm({ ...feedbackForm, comment: e.target.value })}
-              rows={4}
+              rows={3}
               className="w-full px-4 py-2 border border-accent rounded-lg focus:outline-none focus:ring-2 focus:ring-primary resize-none"
-              placeholder="Share your feedback..."
+              placeholder="This review will be visible on the mentor's profile..."
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-text-main mb-2">Private Feedback (for admin/internal use)</label>
+            <textarea
+              value={feedbackForm.privateFeedback}
+              onChange={(e) => setFeedbackForm({ ...feedbackForm, privateFeedback: e.target.value })}
+              rows={3}
+              className="w-full px-4 py-2 border border-accent rounded-lg focus:outline-none focus:ring-2 focus:ring-primary resize-none"
+              placeholder="This feedback is only visible to admins..."
             />
           </div>
           <div className="flex gap-3 pt-4">

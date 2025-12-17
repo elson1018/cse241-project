@@ -5,7 +5,7 @@ import Button from '../components/Button';
 import Modal from '../components/Modal';
 import RoleWrapper from '../components/RoleWrapper';
 import Toast from '../components/Toast';
-import { Plus, Trash2, Edit, Search, Star, BookOpen, Settings } from 'lucide-react';
+import { Plus, Trash2, Edit, Search, Star, BookOpen, Settings, CheckCircle, Circle, X } from 'lucide-react';
 
 const LearningHub = () => {
   const { currentUser, appData, updateData } = useAuth();
@@ -15,6 +15,7 @@ const LearningHub = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [showReviewModal, setShowReviewModal] = useState(false);
+  const [showCourseContentModal, setShowCourseContentModal] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [toast, setToast] = useState(null);
   const [newCourse, setNewCourse] = useState({
@@ -66,12 +67,35 @@ const LearningHub = () => {
   };
 
   const handleStartLearning = (courseId) => {
-    const updatedEnrollments = (appData.enrollments || []).map(e =>
-      e.courseId === courseId && e.userId === currentUser.id
-        ? { ...e, progress: Math.min((e.progress || 0) + 10, 100) }
-        : e
-    );
-    updateData('enrollments', updatedEnrollments);
+    const course = courses.find(c => c.id === courseId);
+    setSelectedCourse(course);
+    setShowCourseContentModal(true);
+  };
+
+  const handleCompleteModule = (courseId, moduleId) => {
+    const enrollment = enrollments.find(e => e.courseId === courseId && e.userId === currentUser.id);
+    if (!enrollment) return;
+
+    const course = courses.find(c => c.id === courseId);
+    const modules = course?.modules || [];
+    const completedModules = enrollment.completedModules || [];
+    
+    if (!completedModules.includes(moduleId)) {
+      const newCompletedModules = [...completedModules, moduleId];
+      const newProgress = Math.round((newCompletedModules.length / modules.length) * 100);
+      
+      const updatedEnrollments = (appData.enrollments || []).map(e =>
+        e.courseId === courseId && e.userId === currentUser.id
+          ? { ...e, progress: newProgress, completedModules: newCompletedModules }
+          : e
+      );
+      updateData('enrollments', updatedEnrollments);
+    }
+  };
+
+  const getCompletedModules = (courseId) => {
+    const enrollment = enrollments.find(e => e.courseId === courseId && e.userId === currentUser.id);
+    return enrollment?.completedModules || [];
   };
 
   const handleAddCourse = () => {
@@ -80,15 +104,24 @@ const LearningHub = () => {
       return;
     }
 
+    // Default modules if none provided
+    const defaultModules = [
+      { id: 1, title: 'Introduction', content: 'Welcome to the course!', type: 'video' },
+      { id: 2, title: 'Core Concepts', content: 'Learn the fundamental concepts.', type: 'reading' },
+      { id: 3, title: 'Practical Application', content: 'Apply what you\'ve learned.', type: 'assignment' },
+      { id: 4, title: 'Final Assessment', content: 'Test your knowledge.', type: 'quiz' }
+    ];
+
     const course = {
       id: Date.now(),
       ...newCourse,
-      reviews: []
+      reviews: [],
+      modules: newCourse.modules || defaultModules
     };
 
     updateData('courses', [...courses, course]);
     setShowAddModal(false);
-    setNewCourse({ title: '', category: 'Business', instructor: '', description: '', image: '' });
+    setNewCourse({ title: '', category: 'Business', instructor: '', description: '', image: '', modules: defaultModules });
     setToast({ message: 'Course added successfully!', type: 'success' });
   };
 
@@ -294,14 +327,29 @@ const LearningHub = () => {
 
                 <div className="flex gap-2 flex-wrap">
                   {enrolled ? (
-                    <Button
-                      variant="secondary"
-                      onClick={() => handleStartLearning(course.id)}
-                      className="flex-1"
-                    >
-                      <BookOpen size={18} className="inline mr-2" />
-                      Continue Learning
-                    </Button>
+                    progress === 100 ? (
+                      <Button
+                        variant="primary"
+                        onClick={() => {
+                          setSelectedCourse(course);
+                          setReview({ rating: 5, comment: '' });
+                          setShowReviewModal(true);
+                        }}
+                        className="flex-1"
+                      >
+                        <Star size={18} className="inline mr-2" />
+                        Rate this Course
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="secondary"
+                        onClick={() => handleStartLearning(course.id)}
+                        className="flex-1"
+                      >
+                        <BookOpen size={18} className="inline mr-2" />
+                        Continue Learning
+                      </Button>
+                    )
                   ) : (
                     <Button
                       variant="primary"
@@ -527,6 +575,110 @@ const LearningHub = () => {
             <Button variant="outline" onClick={() => setShowEditModal(false)} className="flex-1">Cancel</Button>
           </div>
         </div>
+      </Modal>
+
+      {/* Course Content Modal */}
+      <Modal
+        isOpen={showCourseContentModal}
+        onClose={() => setShowCourseContentModal(false)}
+        title={selectedCourse?.title || 'Course Content'}
+      >
+        {selectedCourse && (
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-lg font-semibold text-primary mb-2">Course Description</h3>
+              <p className="text-text-main">{selectedCourse.description || 'No description available.'}</p>
+            </div>
+            
+            <div>
+              <h3 className="text-lg font-semibold text-primary mb-4">Learning Modules</h3>
+              {selectedCourse.modules && selectedCourse.modules.length > 0 ? (
+                <div className="space-y-3">
+                  {selectedCourse.modules.map((module) => {
+                    const completedModules = getCompletedModules(selectedCourse.id);
+                    const isCompleted = completedModules.includes(module.id);
+                    return (
+                      <div
+                        key={module.id}
+                        className={`p-4 border-2 rounded-lg ${
+                          isCompleted ? 'border-green-500 bg-green-50' : 'border-accent bg-white'
+                        }`}
+                      >
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-2">
+                              {isCompleted ? (
+                                <CheckCircle className="text-green-500" size={20} />
+                              ) : (
+                                <Circle className="text-gray-400" size={20} />
+                              )}
+                              <h4 className="font-semibold text-text-main">{module.title}</h4>
+                              <span className="px-2 py-1 bg-accent bg-opacity-30 text-secondary rounded text-xs font-semibold">
+                                {module.type || 'content'}
+                              </span>
+                            </div>
+                            <p className="text-sm text-gray-600 ml-7">{module.content}</p>
+                          </div>
+                          {!isCompleted && (
+                            <Button
+                              variant="primary"
+                              onClick={() => handleCompleteModule(selectedCourse.id, module.id)}
+                              className="ml-4"
+                            >
+                              Mark Complete
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="text-center py-8 text-gray-500">
+                  <p>No modules available for this course yet.</p>
+                  <p className="text-sm mt-2">Course content will be added soon.</p>
+                </div>
+              )}
+            </div>
+            
+            <div className="pt-4 border-t border-accent">
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-sm font-semibold text-text-main">Course Progress</span>
+                <span className="text-sm font-semibold text-primary">{getProgress(selectedCourse.id)}%</span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-3">
+                <div
+                  className="bg-primary h-3 rounded-full transition-all"
+                  style={{ width: `${getProgress(selectedCourse.id)}%` }}
+                />
+              </div>
+            </div>
+            
+            <div className="flex gap-3 pt-4">
+              <Button
+                variant="outline"
+                onClick={() => setShowCourseContentModal(false)}
+                className="flex-1"
+              >
+                Close
+              </Button>
+              {getProgress(selectedCourse.id) === 100 && (
+                <Button
+                  variant="primary"
+                  onClick={() => {
+                    setShowCourseContentModal(false);
+                    setReview({ rating: 5, comment: '' });
+                    setShowReviewModal(true);
+                  }}
+                  className="flex-1"
+                >
+                  <Star size={18} className="inline mr-2" />
+                  Rate this Course
+                </Button>
+              )}
+            </div>
+          </div>
+        )}
       </Modal>
 
       {/* Review Modal */}

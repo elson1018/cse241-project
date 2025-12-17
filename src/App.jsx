@@ -10,6 +10,8 @@ import MentorshipMatch from './pages/MentorshipMatch';
 import Marketplace from './pages/Marketplace';
 import CommunityForum from './pages/CommunityForum';
 import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsOfUse from './pages/TermsOfUse';
+import EditProfile from './pages/EditProfile';
 
 const ProtectedRoute = ({ children }) => {
   const { currentUser } = useAuth();
@@ -25,6 +27,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/terms-of-use" element={<TermsOfUse />} />
             <Route
               path="/*"
               element={
@@ -37,6 +40,7 @@ function App() {
                     <Route path="/mentorship" element={<MentorshipMatch />} />
                     <Route path="/marketplace" element={<Marketplace />} />
                     <Route path="/forum" element={<CommunityForum />} />
+                    <Route path="/edit-profile" element={<EditProfile />} />
                   </Routes>
                 </ProtectedRoute>
               }

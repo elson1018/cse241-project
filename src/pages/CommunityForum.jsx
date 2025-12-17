@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import Card from '../components/Card';
 import Button from '../components/Button';
@@ -121,7 +121,7 @@ const CommunityForum = () => {
 
     updateData('forum_posts', updatedPosts);
     
-    // Update selectedPost
+    // Update selectedPost with the latest data
     const updatedPost = updatedPosts.find(p => p.id === postId);
     if (updatedPost) {
       setSelectedPost(updatedPost);
@@ -129,6 +129,14 @@ const CommunityForum = () => {
     
     setReplyText('');
     setToast({ message: 'Reply posted!', type: 'success' });
+    
+    // Force re-render by updating forumPosts reference
+    setTimeout(() => {
+      const refreshedPost = appData.forum_posts?.find(p => p.id === postId);
+      if (refreshedPost) {
+        setSelectedPost(refreshedPost);
+      }
+    }, 100);
   };
 
   const handleReportPost = (postId) => {
@@ -185,12 +193,24 @@ const CommunityForum = () => {
   };
 
   const handleViewPost = (post) => {
-    setSelectedPost(post);
+    // Always get the latest post data from appData
+    const latestPost = forumPosts.find(p => p.id === post.id);
+    setSelectedPost(latestPost || post);
   };
 
   const isLiked = (post) => {
     return post.likedBy?.includes(currentUser.id) || false;
   };
+
+  // Refresh selectedPost when forum_posts updates
+  useEffect(() => {
+    if (selectedPost) {
+      const updatedPost = forumPosts.find(p => p.id === selectedPost.id);
+      if (updatedPost) {
+        setSelectedPost(updatedPost);
+      }
+    }
+  }, [forumPosts, selectedPost?.id]);
 
   return (
     <div className="min-h-screen bg-background py-8">

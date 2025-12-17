@@ -62,6 +62,12 @@
       "instructor": "Dr. Sarah Lee",
       "description": "Master the art of leading teams.",
       "image": "https://placehold.co/600x400/4E56C0/FFFFFF?text=Leadership",
+      "modules": [
+        { "id": 1, "title": "Introduction to Leadership", "content": "Learn the fundamentals of effective leadership and what makes a great leader.", "type": "video" },
+        { "id": 2, "title": "Communication Skills", "content": "Master the art of clear and effective communication with your team.", "type": "reading" },
+        { "id": 3, "title": "Team Building Strategies", "content": "Discover proven strategies for building and managing high-performing teams.", "type": "video" },
+        { "id": 4, "title": "Final Assessment", "content": "Test your understanding of leadership principles.", "type": "quiz" }
+      ],
       "reviews": [
         { "user": "Elson Ooi", "rating": 5, "comment": "Great course!" }
       ]
@@ -73,6 +79,12 @@
       "instructor": "Jane Doe",
       "description": "HTML, CSS, and React basics.",
       "image": "https://placehold.co/600x400/9B5DE0/FFFFFF?text=Coding",
+      "modules": [
+        { "id": 1, "title": "HTML Fundamentals", "content": "Learn the basics of HTML structure and semantic markup.", "type": "reading" },
+        { "id": 2, "title": "CSS Styling", "content": "Master CSS to create beautiful and responsive designs.", "type": "video" },
+        { "id": 3, "title": "React Basics", "content": "Introduction to React components and state management.", "type": "video" },
+        { "id": 4, "title": "Build Your First App", "content": "Create a complete web application using HTML, CSS, and React.", "type": "assignment" }
+      ],
       "reviews": []
     }
   ],

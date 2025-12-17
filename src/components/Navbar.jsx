@@ -115,15 +115,21 @@ const Navbar = () => {
 
               {/* User Info */}
               <div className="flex items-center gap-3">
-                <img
-                  src={currentUser.avatar || `https://placehold.co/100x100/4E56C0/FFFFFF?text=${currentUser.name.charAt(0)}`}
-                  alt={currentUser.name}
-                  className="w-8 h-8 rounded-full"
-                />
-                <div className="hidden md:block">
-                  <p className="text-sm font-semibold text-text-main">{currentUser.name}</p>
-                  <p className="text-xs text-gray-500 capitalize">{currentUser.role}</p>
-                </div>
+                <button
+                  onClick={() => navigate('/edit-profile')}
+                  className="flex items-center gap-2 hover:bg-accent hover:bg-opacity-30 rounded-lg p-1 transition-colors"
+                  title="Edit Profile"
+                >
+                  <img
+                    src={currentUser.avatar || `https://placehold.co/100x100/4E56C0/FFFFFF?text=${currentUser.name.charAt(0)}`}
+                    alt={currentUser.name}
+                    className="w-8 h-8 rounded-full"
+                  />
+                  <div className="hidden md:block">
+                    <p className="text-sm font-semibold text-text-main">{currentUser.name}</p>
+                    <p className="text-xs text-gray-500 capitalize">{currentUser.role}</p>
+                  </div>
+                </button>
                 <button
                   onClick={handleLogout}
                   className="p-2 text-text-main hover:bg-accent hover:bg-opacity-30 rounded-lg transition-colors"

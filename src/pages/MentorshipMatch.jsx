@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import Card from '../components/Card';
 import Button from '../components/Button';
@@ -216,6 +216,29 @@ const MentorshipMatch = () => {
     ).sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
   };
 
+  // Mark messages as seen when chat modal is opened
+  useEffect(() => {
+    if (showChatModal && selectedUser) {
+      const unreadMessages = messages.filter(m =>
+        m.receiverId === currentUser.id &&
+        m.senderId === selectedUser.id &&
+        m.status !== 'seen'
+      );
+
+      if (unreadMessages.length > 0) {
+        const updatedMessages = messages.map(m => {
+          if (m.receiverId === currentUser.id &&
+              m.senderId === selectedUser.id &&
+              m.status !== 'seen') {
+            return { ...m, status: 'seen' };
+          }
+          return m;
+        });
+        updateData('messages', updatedMessages);
+      }
+    }
+  }, [showChatModal, selectedUser?.id]);
+
   const getOtherUser = (request) => {
     if (currentUser.role === 'mentor') {
       return users.find(u => u.id === request.menteeId);
@@ -243,18 +266,16 @@ const MentorshipMatch = () => {
           >
             Browse Mentors
           </button>
-          <RoleWrapper allowedRoles={['mentor', 'admin']}>
-            <button
-              onClick={() => setActiveTab('browseMentees')}
-              className={`px-6 py-3 font-semibold transition-colors border-b-2 ${
-                activeTab === 'browseMentees'
-                  ? 'border-primary text-primary'
-                  : 'border-transparent text-text-main hover:text-primary'
-              }`}
-            >
-              Browse Mentees
-            </button>
-          </RoleWrapper>
+          <button
+            onClick={() => setActiveTab('browseMentees')}
+            className={`px-6 py-3 font-semibold transition-colors border-b-2 ${
+              activeTab === 'browseMentees'
+                ? 'border-primary text-primary'
+                : 'border-transparent text-text-main hover:text-primary'
+            }`}
+          >
+            Browse Mentees
+          </button>
           <button
             onClick={() => setActiveTab('connections')}
             className={`px-6 py-3 font-semibold transition-colors border-b-2 ${
@@ -704,9 +725,16 @@ const MentorshipMatch = () => {
                     }`}
                   >
                     <p>{message.text}</p>
-                    <p className={`text-xs mt-1 ${message.senderId === currentUser.id ? 'text-white opacity-80' : 'text-gray-500'}`}>
-                      {new Date(message.timestamp).toLocaleString()}
-                    </p>
+                    <div className={`flex items-center justify-between gap-2 mt-1 ${message.senderId === currentUser.id ? 'text-white opacity-80' : 'text-gray-500'}`}>
+                      <p className="text-xs">
+                        {new Date(message.timestamp).toLocaleString()}
+                      </p>
+                      {message.senderId === currentUser.id && (
+                        <span className="text-xs italic">
+                          {message.status === 'seen' ? 'Seen' : 'Sent'}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
               ))}

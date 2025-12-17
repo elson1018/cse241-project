@@ -1,3 +1,6 @@
+import { useNavigate, useLocation } from 'react-router-dom';
+import Button from '../components/Button';
+import { ArrowLeft } from 'lucide-react';
 
 const monthNames = [
   "January", "February", "March", "April", "May", "June",
@@ -5,13 +8,35 @@ const monthNames = [
 ];
 
 const TermsOfUse = () => {
+    const navigate = useNavigate();
+    const location = useLocation();
     const now = new Date();
     const month = monthNames[now.getMonth()];
     const year = now.getFullYear();
 
+    const handleBack = () => {
+      // If there's a previous location in history, go back
+      // Otherwise, navigate to signup page
+      if (window.history.length > 1) {
+        navigate(-1);
+      } else {
+        navigate('/signup', { replace: false });
+      }
+    };
+
   return (
     <div className="min-h-screen bg-background py-12 px-6">
       <div className="max-w-3xl mx-auto bg-white p-8 rounded-xl shadow">
+        <div className="mb-6">
+          <Button
+            variant="outline"
+            onClick={handleBack}
+            className="mb-4"
+          >
+            <ArrowLeft size={18} className="inline mr-2" />
+            Back
+          </Button>
+        </div>
         <h1 className="text-3xl font-bold text-primary mb-6">Terms of Use</h1>
         
         <p className="mb-4 text-text-main">

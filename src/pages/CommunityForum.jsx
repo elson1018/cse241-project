@@ -5,7 +5,7 @@ import Button from '../components/Button';
 import Modal from '../components/Modal';
 import RoleWrapper from '../components/RoleWrapper';
 import Toast from '../components/Toast';
-import { MessageSquare, Plus, Trash2, Send, Heart, Flag, Search, Volume2, Ban } from 'lucide-react';
+import { MessageSquare, Plus, Trash2, Send, Heart, Flag, Search, Volume2, Ban, Reply } from 'lucide-react';
 
 const CommunityForum = () => {
   const { currentUser, appData, updateData } = useAuth();
@@ -22,6 +22,9 @@ const CommunityForum = () => {
   });
   const [announcementText, setAnnouncementText] = useState('');
   const [replyText, setReplyText] = useState('');
+  const [replyingToReplyId, setReplyingToReplyId] = useState(null);
+  const [activeReplyPostId, setActiveReplyPostId] = useState(null);
+  const [listReplyText, setListReplyText] = useState('');
 
   const categories = ['All', 'Career Advice', 'Technology', 'General'];
   const forumPosts = appData.forum_posts || [];
@@ -84,8 +87,9 @@ const CommunityForum = () => {
     }
   };
 
-  const handleReply = (postId) => {
-    if (!replyText.trim()) {
+  const handleReply = (postId, parentReplyId = null, contentOverride) => {
+    const content = (contentOverride !== undefined ? contentOverride : replyText).trim();
+    if (!content) {
       setToast({ message: 'Please enter a reply', type: 'error' });
       return;
     }
@@ -96,25 +100,81 @@ const CommunityForum = () => {
           id: Date.now(),
           authorId: currentUser.id,
           authorName: currentUser.name,
-          content: replyText,
-          timestamp: new Date().toISOString()
+          content,
+          timestamp: new Date().toISOString(),
+          parentReplyId: parentReplyId || null,
+          replies: []
         };
         
-        // Create notification for post author
-        if (post.authorId !== currentUser.id) {
-          const notification = {
-            id: Date.now(),
-            userId: post.authorId,
-            text: `${currentUser.name} replied to your post: "${post.title}"`,
-            read: false
+        // Ensure replies array exists
+        const currentReplies = post.replies || [];
+        
+        if (parentReplyId) {
+          // This is a nested reply - find the parent reply and add to its replies
+          const addNestedReply = (replies) => {
+            return replies.map(reply => {
+              if (reply.id === parentReplyId) {
+                return {
+                  ...reply,
+                  replies: [...(reply.replies || []), newReply]
+                };
+              } else if (reply.replies && reply.replies.length > 0) {
+                return {
+                  ...reply,
+                  replies: addNestedReply(reply.replies)
+                };
+              }
+              return reply;
+            });
           };
-          updateData('notifications', [...(appData.notifications || []), notification]);
+          
+          const updatedReplies = addNestedReply(currentReplies);
+          
+          // Create notification for parent reply author
+          const findParentReply = (replies) => {
+            for (const reply of replies) {
+              if (reply.id === parentReplyId) return reply;
+              if (reply.replies && reply.replies.length > 0) {
+                const found = findParentReply(reply.replies);
+                if (found) return found;
+              }
+            }
+            return null;
+          };
+          
+          const parentReply = findParentReply(currentReplies);
+          if (parentReply && parentReply.authorId !== currentUser.id) {
+            const notification = {
+              id: Date.now(),
+              userId: parentReply.authorId,
+              text: `${currentUser.name} replied to your comment`,
+              read: false
+            };
+            updateData('notifications', [...(appData.notifications || []), notification]);
+          }
+          
+          return {
+            ...post,
+            replies: updatedReplies
+          };
+        } else {
+          // This is a top-level reply
+          // Create notification for post author
+          if (post.authorId !== currentUser.id) {
+            const notification = {
+              id: Date.now(),
+              userId: post.authorId,
+              text: `${currentUser.name} replied to your post: "${post.title}"`,
+              read: false
+            };
+            updateData('notifications', [...(appData.notifications || []), notification]);
+          }
+          
+          return {
+            ...post,
+            replies: [...currentReplies, newReply]
+          };
         }
-        
-        return {
-          ...post,
-          replies: [...(post.replies || []), newReply]
-        };
       }
       return post;
     });
@@ -128,6 +188,7 @@ const CommunityForum = () => {
     }
     
     setReplyText('');
+    setReplyingToReplyId(null);
     setToast({ message: 'Reply posted!', type: 'success' });
     
     // Force re-render by updating forumPosts reference
@@ -137,6 +198,28 @@ const CommunityForum = () => {
         setSelectedPost(refreshedPost);
       }
     }, 100);
+  };
+
+  const handleListReplySubmit = (postId) => {
+    if (!listReplyText.trim()) {
+      setToast({ message: 'Please enter a reply', type: 'error' });
+      return;
+    }
+    // Submit as a top-level reply for this post
+    handleReply(postId, null, listReplyText);
+    setListReplyText('');
+    // Keep the section open so the user sees their new reply
+    setActiveReplyPostId(postId);
+  };
+
+  const togglePostReplySection = (postId) => {
+    if (activeReplyPostId === postId) {
+      setActiveReplyPostId(null);
+      setListReplyText('');
+    } else {
+      setActiveReplyPostId(postId);
+      setListReplyText('');
+    }
   };
 
   const handleReportPost = (postId) => {
@@ -310,11 +393,66 @@ const CommunityForum = () => {
                         <Heart size={16} className={isLiked(post) ? 'fill-current' : ''} />
                         {post.likes || 0}
                       </button>
-                      <span className="text-sm text-gray-500">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          togglePostReplySection(post.id);
+                        }}
+                        className="flex items-center gap-1 text-sm text-gray-500 hover:text-primary transition-colors"
+                      >
                         <MessageSquare size={16} className="inline mr-1" />
                         {post.replies?.length || 0} {post.replies?.length === 1 ? 'reply' : 'replies'}
-                      </span>
+                      </button>
                     </div>
+                    {activeReplyPostId === post.id && (
+                      <div className="mt-3 border-t border-accent pt-3 space-y-3">
+                        {post.replies && post.replies.length > 0 && (
+                          <div className="space-y-2">
+                            {post.replies.map((reply) => (
+                              <div key={reply.id} className="bg-gray-50 rounded-lg p-3 border border-accent">
+                                <p className="font-semibold text-primary mb-1">{reply.authorName}</p>
+                                <p className="text-text-main text-sm">{reply.content}</p>
+                                {reply.timestamp && (
+                                  <p className="text-xs text-gray-500 mt-1">
+                                    {new Date(reply.timestamp).toLocaleString()}
+                                  </p>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                        <div className="space-y-2">
+                          <textarea
+                            value={listReplyText}
+                            onChange={(e) => setListReplyText(e.target.value)}
+                            rows={3}
+                            className="w-full px-3 py-2 border border-accent rounded-lg focus:outline-none focus:ring-2 focus:ring-primary resize-none"
+                            placeholder="Write a reply to this post..."
+                          />
+                          <div className="flex justify-end gap-2">
+                            <Button
+                              variant="outline"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setActiveReplyPostId(null);
+                                setListReplyText('');
+                              }}
+                            >
+                              Cancel
+                            </Button>
+                            <Button
+                              variant="primary"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleListReplySubmit(post.id);
+                              }}
+                            >
+                              Submit
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                   <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
                     <Button
@@ -384,44 +522,88 @@ const CommunityForum = () => {
 
               <div className="border-t border-accent pt-6">
                 <h3 className="text-lg font-bold text-primary mb-4">
-                  Replies ({selectedPost.replies?.length || 0})
+                  Replies ({(selectedPost.replies || []).length})
                 </h3>
-                <div className="space-y-4 mb-6">
-                  {selectedPost.replies?.length === 0 ? (
-                    <p className="text-gray-500 text-center py-4">No replies yet. Be the first to reply!</p>
-                  ) : (
-                    selectedPost.replies.map((reply) => (
-                      <div key={reply.id} className="bg-gray-50 rounded-lg p-4 border border-accent">
-                        <p className="font-semibold text-primary mb-1">{reply.authorName}</p>
-                        <p className="text-text-main">{reply.content}</p>
-                        {reply.timestamp && (
-                          <p className="text-xs text-gray-500 mt-2">
-                            {new Date(reply.timestamp).toLocaleString()}
-                          </p>
+                
+                {/* Recursive Reply Component */}
+                {(() => {
+                  const renderReply = (reply, depth = 0) => {
+                    const nestedReplies = reply.replies || [];
+                    return (
+                      <div key={reply.id} className={`${depth > 0 ? 'ml-6 mt-3' : ''}`}>
+                        <div className="bg-gray-50 rounded-lg p-4 border border-accent">
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1">
+                              <p className="font-semibold text-primary mb-1">{reply.authorName}</p>
+                              <p className="text-text-main">{reply.content}</p>
+                              {reply.timestamp && (
+                                <p className="text-xs text-gray-500 mt-2">
+                                  {new Date(reply.timestamp).toLocaleString()}
+                                </p>
+                              )}
+                            </div>
+                            <button
+                              onClick={() => {
+                                setReplyingToReplyId(reply.id);
+                                document.getElementById('reply-input')?.focus();
+                              }}
+                              className="ml-2 p-2 text-primary hover:bg-primary hover:bg-opacity-10 rounded-lg transition-colors"
+                              title="Reply to this comment"
+                            >
+                              <Reply size={16} />
+                            </button>
+                          </div>
+                        </div>
+                        {nestedReplies.length > 0 && (
+                          <div className="mt-2 space-y-2">
+                            {nestedReplies.map(nestedReply => renderReply(nestedReply, depth + 1))}
+                          </div>
                         )}
                       </div>
-                    ))
-                  )}
-                </div>
+                    );
+                  };
+
+                  return (
+                    <div className="space-y-4 mb-6">
+                      {!selectedPost.replies || selectedPost.replies.length === 0 ? (
+                        <p className="text-gray-500 text-center py-4">No replies yet. Be the first to reply!</p>
+                      ) : (
+                        (selectedPost.replies || []).map((reply) => renderReply(reply))
+                      )}
+                    </div>
+                  );
+                })()}
 
                 <div className="border-t border-accent pt-4">
+                  <h4 className="text-sm font-semibold text-text-main mb-2">
+                    {replyingToReplyId ? 'Reply to comment' : 'Add a Reply'}
+                  </h4>
+                  {replyingToReplyId && (
+                    <button
+                      onClick={() => setReplyingToReplyId(null)}
+                      className="text-xs text-primary mb-2 hover:underline"
+                    >
+                      Cancel reply to comment
+                    </button>
+                  )}
                   <div className="flex gap-2">
                     <input
+                      id="reply-input"
                       type="text"
                       value={replyText}
                       onChange={(e) => setReplyText(e.target.value)}
                       onKeyPress={(e) => {
                         if (e.key === 'Enter' && !e.shiftKey) {
                           e.preventDefault();
-                          handleReply(selectedPost.id);
+                          handleReply(selectedPost.id, replyingToReplyId);
                         }
                       }}
-                      placeholder="Write a reply..."
+                      placeholder={replyingToReplyId ? "Write a reply to this comment..." : "Write a reply..."}
                       className="flex-1 px-4 py-2 border border-accent rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                     />
                     <Button
                       variant="primary"
-                      onClick={() => handleReply(selectedPost.id)}
+                      onClick={() => handleReply(selectedPost.id, replyingToReplyId)}
                     >
                       <Send size={18} className="inline mr-1" />
                       Reply

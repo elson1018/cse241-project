@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import Button from '../components/Button';
@@ -27,6 +27,27 @@ const Signup = () => {
   const [toast, setToast] = useState(null);
   const { signup, appData } = useAuth();
   const navigate = useNavigate();
+
+  // Restore form data from sessionStorage on mount
+  useEffect(() => {
+    const savedFormData = sessionStorage.getItem('signupFormData');
+    if (savedFormData) {
+      try {
+        const parsed = JSON.parse(savedFormData);
+        setFormData(parsed);
+        // Determine which step to show based on filled data
+        if (parsed.name && parsed.username && parsed.password) {
+          if (parsed.bio || parsed.agreement) {
+            setCurrentStep(3);
+          } else if (parsed.industry || parsed.experience || parsed.age || parsed.goals) {
+            setCurrentStep(2);
+          }
+        }
+      } catch (e) {
+        console.error('Error restoring form data:', e);
+      }
+    }
+  }, []);
 
   const handleChange = (e) => {
     setFormData({
@@ -505,11 +526,17 @@ const Signup = () => {
                   />
                   <label htmlFor="agreement" className="text-sm text-text-main">
                     I have read and agree to the{' '}
-                    <Link to="/privacy-policy" className="text-primary underline">
+                    <Link to="/privacy-policy" className="text-primary underline" onClick={(e) => {
+                      // Store form data in sessionStorage before navigating
+                      sessionStorage.setItem('signupFormData', JSON.stringify(formData));
+                    }}>
                       Privacy Policy
                     </Link>{' '}
                     and {' '}
-                    <Link to="/terms-of-use" className="text-primary underline">
+                    <Link to="/terms-of-use" className="text-primary underline" onClick={(e) => {
+                      // Store form data in sessionStorage before navigating
+                      sessionStorage.setItem('signupFormData', JSON.stringify(formData));
+                    }}>
                       Terms of Use
                     </Link>
                   </label>

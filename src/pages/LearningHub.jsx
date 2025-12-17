@@ -345,7 +345,6 @@ const LearningHub = () => {
                         }}
                         className="flex-1"
                       >
-                        <Star size={18} className="inline mr-2" />
                         Rate this Course
                       </Button>
                     ) : (
@@ -682,7 +681,6 @@ const LearningHub = () => {
                   }}
                   className="flex-1"
                 >
-                  <Star size={18} className="inline mr-2" />
                   Rate this Course
                 </Button>
               )}

@@ -35,17 +35,16 @@ const Navbar = () => {
     }
   };
 
+  const markNotificationAsRead = (notificationId) => {
+    const updatedNotifications = appData.notifications.map(n =>
+      n.id === notificationId ? { ...n, read: true } : n
+    );
+    updateData('notifications', updatedNotifications);
+  };
 
-const markNotificationAsRead = (notificationId) => {
-  const updatedNotifications = appData.notifications.map(n =>
-    n.id === notificationId ? { ...n, read: true } : n
-  );
-  updateData('notifications', updatedNotifications);
-};
-
-if (!currentUser) {
-  return null; // Don't show navbar if not logged in
-}
+  if (!currentUser) {
+    return null; // Don't show navbar if not logged in
+  }
 
   return (
     <nav className="bg-white shadow-md border-b-2 border-accent sticky top-0 z-40">

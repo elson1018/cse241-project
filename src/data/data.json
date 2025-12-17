@@ -40,7 +40,9 @@
       "role": "entrepreneur",
       "shopName": "Jessica's Crafts",
       "shopDescription": "Handmade with love.",
-      "bio": "Artisan crafter."
+      "bio": "Artisan crafter.",
+      "contactEmail": "jessica.crafts@example.com",
+      "contactPhone": "+60 12-345 6789"
     },
     {
       "id": 5,

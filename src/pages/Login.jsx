@@ -44,12 +44,21 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-background flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      {/* Background blobs */}
+      <div className="pointer-events-none absolute -z-10 inset-0">
+        <div className="absolute -top-24 left-[-40px] w-72 h-72 bg-peach/70 rounded-full blur-3xl" />
+        <div className="absolute bottom-[-60px] right-[-40px] w-80 h-80 bg-cream/80 rounded-full blur-3xl" />
+      </div>
+
       <div className="max-w-md w-full">
-        <Card>
+        <Card className="rounded-[2rem] backdrop-blur-sm bg-white/80">
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-primary mb-2">Wonder Women</h1>
-            <p className="text-text-main">Welcome back! Please login to continue.</p>
+            <h1 className="text-5xl font-bold text-burgundy mb-3">Wonder Women</h1>
+            <p className="text-text-main text-sm">
+              Welcome back,&nbsp;
+              <span className="italic">trailblazer</span>. Please log in to continue.
+            </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -63,7 +72,7 @@ const Login = () => {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
-                className="w-full px-4 py-3 border-2 border-accent rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                className="w-full px-5 py-3 rounded-full bg-white/50 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/50 border border-white/60 placeholder:text-gray-400"
                 placeholder="Enter your username"
               />
             </div>
@@ -79,7 +88,7 @@ const Login = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="w-full px-4 py-3 border-2 border-accent rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all pr-12"
+                  className="w-full px-5 py-3 rounded-full bg-white/50 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/50 border border-white/60 placeholder:text-gray-400 pr-12"
                   placeholder="Enter your password"
                 />
                 <button

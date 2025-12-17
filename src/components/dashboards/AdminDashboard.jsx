@@ -64,7 +64,14 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background py-8">
+    <div className="min-h-screen bg-background py-8 relative overflow-hidden">
+      {/* Background blobs */}
+      <div className="pointer-events-none absolute -z-10 inset-0">
+        <div className="absolute -top-24 -right-16 w-72 h-72 bg-peach/60 rounded-full blur-3xl" />
+        <div className="absolute top-1/3 left-[-80px] w-80 h-80 bg-cream/70 rounded-full blur-3xl" />
+        <div className="absolute bottom-[-60px] right-1/4 w-64 h-64 bg-secondary/40 rounded-full blur-3xl" />
+      </div>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <div>
@@ -72,7 +79,7 @@ const AdminDashboard = () => {
             <p className="text-text-main text-lg">Manage the Wonder Women platform</p>
           </div>
           <div className="hidden md:block">
-            <div className="w-40 h-32 rounded-3xl bg-gradient-to-br from-peach via-red-500/10 to-yellow-500/10 flex items-center justify-center">
+            <div className="w-40 h-32 rounded-[2rem] bg-peach/60 flex items-center justify-center shadow-card-soft">
               <span className="text-burgundy font-semibold text-sm text-center px-3">
                 Keeping the community safe
               </span>
@@ -81,33 +88,33 @@ const AdminDashboard = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card className="bg-gradient-to-br from-red-600 to-red-400 text-white overflow-hidden relative">
+          <Card className="bg-terracotta text-burgundy overflow-hidden relative rounded-3xl">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-white opacity-90 mb-1">Pending Approvals</p>
+                <p className="opacity-80 mb-1 text-sm">Pending Approvals</p>
                 <p className="text-3xl font-bold">{pendingMentors.length}</p>
               </div>
-              <Shield size={56} className="opacity-20" />
+              <Shield size={48} className="opacity-40" />
             </div>
           </Card>
 
-          <Card className="bg-gradient-to-br from-yellow-500 to-accent text-white overflow-hidden relative">
+          <Card className="bg-mustard text-burgundy overflow-hidden relative rounded-3xl">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-white opacity-90 mb-1">Flagged Posts</p>
+                <p className="opacity-80 mb-1 text-sm">Flagged Posts</p>
                 <p className="text-3xl font-bold">{flaggedPosts.length}</p>
               </div>
-              <Flag size={56} className="opacity-20" />
+              <Flag size={48} className="opacity-40" />
             </div>
           </Card>
 
-          <Card className="bg-gradient-to-br from-blue-600 to-blue-400 text-white overflow-hidden relative">
+          <Card className="bg-sage text-burgundy overflow-hidden relative rounded-3xl">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-white opacity-90 mb-1">Total Users</p>
+                <p className="opacity-80 mb-1 text-sm">Total Users</p>
                 <p className="text-3xl font-bold">{allUsers.length}</p>
               </div>
-              <Users size={56} className="opacity-20" />
+              <Users size={48} className="opacity-40" />
             </div>
           </Card>
         </div>

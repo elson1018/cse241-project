@@ -15,7 +15,10 @@ export default {
         peach: '#FFE3D4', // Soft peach
         burgundy: '#4A2C2A', // Deep burgundy for headings/text
         background: '#FFF5E6', // Alias for main background
-        'text-main': '#4A2C2A', // Primary text color
+        'text-main': '#4A2C2A', // Primary text color,
+        terracotta: '#E8B4B8',
+        mustard: '#F3E3B6',
+        sage: '#B4C5E4',
       },
       boxShadow: {
         'card-soft': '0 10px 30px -10px rgba(74, 44, 42, 0.15)',

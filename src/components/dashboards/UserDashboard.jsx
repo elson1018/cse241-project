@@ -3,6 +3,9 @@ import Card from '../Card';
 import Button from '../Button';
 import { BookOpen, Users, ShoppingBag, TrendingUp, Calendar, Package } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import heroWoman from '../../assets/hero-woman.jpg';
+import flowerDeco1 from '../../assets/flower-deco1.jpg';
+import flowerDeco2 from '../../assets/flower-deco2.jpg';
 
 const UserDashboard = () => {
   const { currentUser, appData } = useAuth();
@@ -44,51 +47,82 @@ const UserDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background py-8">
+    <div className="min-h-screen bg-background py-8 relative overflow-hidden">
+      {/* Background blobs */}
+      <div className="pointer-events-none absolute -z-10 inset-0">
+        <div className="absolute -top-24 -left-16 w-72 h-72 bg-peach/60 rounded-full blur-3xl" />
+        <div className="absolute top-1/3 right-[-80px] w-80 h-80 bg-cream/70 rounded-full blur-3xl" />
+        <div className="absolute bottom-[-60px] left-1/4 w-64 h-64 bg-secondary/40 rounded-full blur-3xl" />
+      </div>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-          <div>
-            <h1 className="text-4xl md:text-5xl font-bold text-burgundy mb-2">Welcome back, {currentUser.name}!</h1>
-            <p className="text-text-main text-lg">Here's your activity overview</p>
-          </div>
-          <div className="hidden md:block">
-            {/* Placeholder for future illustration */}
-            <div className="w-40 h-32 rounded-3xl bg-gradient-to-br from-peach via-primary/10 to-accent/20 flex items-center justify-center">
-              <span className="text-burgundy font-semibold text-sm text-center px-3">
-                Empowering your journey
-              </span>
+        {/* Welcome Hero Card */}
+        <Card className="mb-10 rounded-[2rem] md:p-10 relative overflow-visible bg-white/90">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <div className="space-y-4">
+              <p className="uppercase tracking-[0.2em] text-xs text-text-main/70">Dashboard</p>
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-burgundy leading-tight">
+                Welcome back,&nbsp;
+                <span className="italic">{currentUser.name}</span>
+              </h1>
+              <p className="text-text-main/80 text-base sm:text-lg max-w-md">
+                Your learning, mentorship, and marketplace activity in one warm, curated space.
+              </p>
+            </div>
+
+            <div className="relative flex justify-center md:justify-end">
+              <div className="w-56 h-64 sm:w-64 sm:h-72 md:w-72 md:h-80 bg-peach/60 rounded-tl-[80px] rounded-br-[80px] overflow-hidden shadow-card-soft">
+                <img
+                  src={heroWoman}
+                  alt="Smiling woman entrepreneur"
+                  className="w-full h-full object-cover mix-blend-multiply"
+                />
+              </div>
+
+              {/* Scrapbook flowers */}
+              <img
+                src={flowerDeco1}
+                alt="Floral decoration"
+                className="hidden sm:block absolute -top-6 -right-4 w-24 rounded-2xl mix-blend-multiply opacity-80 shadow-md"
+              />
+              <img
+                src={flowerDeco2}
+                alt="Floral decoration"
+                className="hidden sm:block absolute -bottom-6 -left-4 w-20 rounded-2xl mix-blend-multiply opacity-80 -rotate-12 shadow-md"
+              />
             </div>
           </div>
-        </div>
+        </Card>
 
+        {/* Stat Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card className="bg-gradient-to-br from-peach to-primary text-white overflow-hidden relative">
+          <Card className="bg-terracotta text-burgundy overflow-hidden relative rounded-3xl">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-white opacity-90 mb-1">Enrolled Courses</p>
+                <p className="opacity-80 mb-1 text-sm">Enrolled Courses</p>
                 <p className="text-3xl font-bold">{enrolledCourses.length}</p>
               </div>
-              <BookOpen size={56} className="opacity-20" />
+              <BookOpen size={48} className="opacity-40" />
             </div>
           </Card>
 
-          <Card className="bg-gradient-to-br from-primary to-secondary text-white overflow-hidden relative">
+          <Card className="bg-mustard text-burgundy overflow-hidden relative rounded-3xl">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-white opacity-90 mb-1">Upcoming Meetings</p>
+                <p className="opacity-80 mb-1 text-sm">Upcoming Meetings</p>
                 <p className="text-3xl font-bold">{upcomingMeetings.length}</p>
               </div>
-              <Calendar size={56} className="opacity-20" />
+              <Calendar size={48} className="opacity-40" />
             </div>
           </Card>
 
-          <Card className="bg-gradient-to-br from-accent to-primary text-white overflow-hidden relative">
+          <Card className="bg-sage text-burgundy overflow-hidden relative rounded-3xl">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-white opacity-90 mb-1">Total Orders</p>
+                <p className="opacity-80 mb-1 text-sm">Total Orders</p>
                 <p className="text-3xl font-bold">{recentOrders.length}</p>
               </div>
-              <ShoppingBag size={56} className="opacity-20" />
+              <ShoppingBag size={48} className="opacity-40" />
             </div>
           </Card>
         </div>

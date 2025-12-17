@@ -39,6 +39,8 @@ const Marketplace = () => {
   const [storefrontData, setStorefrontData] = useState({
     shopName: currentUser?.shopName || '',
     shopDescription: currentUser?.shopDescription || '',
+    contactEmail: currentUser?.contactEmail || '',
+    contactPhone: currentUser?.contactPhone || '',
     logo: ''
   });
   const [review, setReview] = useState({ rating: 5, comment: '' });
@@ -229,7 +231,9 @@ const Marketplace = () => {
         ? {
             ...user,
             shopName: storefrontData.shopName,
-            shopDescription: storefrontData.shopDescription
+            shopDescription: storefrontData.shopDescription,
+            contactEmail: storefrontData.contactEmail,
+            contactPhone: storefrontData.contactPhone
           }
         : user
     );
@@ -280,7 +284,7 @@ const Marketplace = () => {
   const getAverageRating = (product) => {
     if (!product.reviews || product.reviews.length === 0) return 0;
     const sum = product.reviews.reduce((acc, r) => acc + r.rating, 0);
-    return (sum / product.reviews.length).toFixed(1);
+    return parseFloat((sum / product.reviews.length).toFixed(1));
   };
 
   return (
@@ -448,6 +452,38 @@ const Marketplace = () => {
           </>
         )}
 
+        {/* Storefront Info */}
+        {activeTab === 'storefront' && canUseEntrepreneurTools && (
+          <div className="mb-6">
+            <Card className="bg-white/90 rounded-3xl border border-peach/60">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                  <h2 className="text-2xl font-bold text-burgundy mb-1">
+                    {storefrontData.shopName || currentUser.shopName || currentUser.name}'s Storefront
+                  </h2>
+                  <p className="text-sm text-text-main/80 max-w-xl">
+                    {storefrontData.shopDescription || currentUser.shopDescription || 'Share your story and what makes your products special.'}
+                  </p>
+                </div>
+                <div className="text-sm text-text-main/90 space-y-1 md:text-right">
+                  {(storefrontData.contactEmail || currentUser.contactEmail) && (
+                    <p>
+                      <span className="font-semibold">Email: </span>
+                      {storefrontData.contactEmail || currentUser.contactEmail}
+                    </p>
+                  )}
+                  {(storefrontData.contactPhone || currentUser.contactPhone) && (
+                    <p>
+                      <span className="font-semibold">Phone: </span>
+                      {storefrontData.contactPhone || currentUser.contactPhone}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </Card>
+          </div>
+        )}
+
         {/* Product Grid */}
         {(activeTab === 'browse' || activeTab === 'storefront') && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -472,12 +508,12 @@ const Marketplace = () => {
                           <Star
                             key={star}
                             size={14}
-                            className={star <= avgRating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}
+                            className={star <= Math.round(avgRating) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}
                           />
                         ))}
                       </div>
                       <span className="text-xs text-gray-600">
-                        {avgRating} ({product.reviews.length})
+                        {avgRating.toFixed(1)} / 5 ({product.reviews.length})
                       </span>
                     </div>
                   )}

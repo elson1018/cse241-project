@@ -119,7 +119,9 @@
       "sellerId": 4,
       "sellerName": "Jessica's Crafts",
       "image": "https://placehold.co/300x300/FDCFFA/4E56C0?text=Scarf",
-      "reviews": [],
+      "reviews": [
+        { "user": "Elson Ooi", "rating": 4, "comment": "Great course!" }
+      ],
       "isBanned": false,
       "isSuspended": false
     },
@@ -132,7 +134,10 @@
       "sellerName": "Jessica's Crafts",
       "image": "https://placehold.co/300x300/F6D186/4E56C0?text=Granola",
       "description": "Small-batch granola with cranberries, almonds, and honey.",
-      "reviews": [],
+      "reviews": [
+        { "user": "Elson Ooi", "rating": 5, "comment": "Great course!" },
+        { "user": "Dr. Alice Wong", "rating": 3, "comment": "Great course!" }
+      ],
       "isBanned": false,
       "isSuspended": false
     },
@@ -145,7 +150,9 @@
       "sellerName": "Jessica's Crafts",
       "image": "https://placehold.co/300x300/C7F0BD/4E56C0?text=Tote",
       "description": "Canvas tote with personalized logo or slogan print.",
-      "reviews": [],
+      "reviews": [
+        { "user": "Elson Ooi", "rating": 5, "comment": "Great course!" }
+      ],
       "isBanned": false,
       "isSuspended": false
     },
@@ -171,7 +178,10 @@
       "sellerName": "Jessica's Crafts",
       "image": "https://placehold.co/300x300/F7E7CE/4E56C0?text=Candles",
       "description": "Set of three soy candles with lavender, citrus, and cedar scents.",
-      "reviews": [],
+      "reviews": [
+        { "user": "Elson Ooi", "rating": 5, "comment": "Great course!" },
+        { "user": "Dr. Alice Wong", "rating": 3, "comment": "Great course!" }
+      ],
       "isBanned": false,
       "isSuspended": false
     },

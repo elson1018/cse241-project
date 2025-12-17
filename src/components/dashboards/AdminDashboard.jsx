@@ -66,39 +66,48 @@ const AdminDashboard = () => {
   return (
     <div className="min-h-screen bg-background py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-primary mb-2">Admin Dashboard</h1>
-          <p className="text-text-main">Manage the Wonder Women platform</p>
+        <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+          <div>
+            <h1 className="text-4xl md:text-5xl font-bold text-burgundy mb-2">Admin Dashboard</h1>
+            <p className="text-text-main text-lg">Manage the Wonder Women platform</p>
+          </div>
+          <div className="hidden md:block">
+            <div className="w-40 h-32 rounded-3xl bg-gradient-to-br from-peach via-red-500/10 to-yellow-500/10 flex items-center justify-center">
+              <span className="text-burgundy font-semibold text-sm text-center px-3">
+                Keeping the community safe
+              </span>
+            </div>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card className="bg-gradient-to-br from-red-500 to-red-600 text-white">
+          <Card className="bg-gradient-to-br from-red-600 to-red-400 text-white overflow-hidden relative">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-white opacity-90 mb-1">Pending Approvals</p>
                 <p className="text-3xl font-bold">{pendingMentors.length}</p>
               </div>
-              <Shield size={40} className="opacity-80" />
+              <Shield size={56} className="opacity-20" />
             </div>
           </Card>
 
-          <Card className="bg-gradient-to-br from-yellow-500 to-yellow-600 text-white">
+          <Card className="bg-gradient-to-br from-yellow-500 to-accent text-white overflow-hidden relative">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-white opacity-90 mb-1">Flagged Posts</p>
                 <p className="text-3xl font-bold">{flaggedPosts.length}</p>
               </div>
-              <Flag size={40} className="opacity-80" />
+              <Flag size={56} className="opacity-20" />
             </div>
           </Card>
 
-          <Card className="bg-gradient-to-br from-blue-500 to-blue-600 text-white">
+          <Card className="bg-gradient-to-br from-blue-600 to-blue-400 text-white overflow-hidden relative">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-white opacity-90 mb-1">Total Users</p>
                 <p className="text-3xl font-bold">{allUsers.length}</p>
               </div>
-              <Users size={40} className="opacity-80" />
+              <Users size={56} className="opacity-20" />
             </div>
           </Card>
         </div>

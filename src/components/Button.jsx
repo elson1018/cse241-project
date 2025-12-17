@@ -6,13 +6,13 @@ const Button = ({
   disabled = false,
   type = 'button'
 }) => {
-  const baseStyles = 'px-4 py-2 rounded-lg font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed';
+  const baseStyles = 'px-5 py-2.5 rounded-full font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed';
   
   const variants = {
-    primary: 'bg-primary text-white hover:bg-opacity-90',
-    secondary: 'bg-secondary text-white hover:bg-opacity-90',
-    accent: 'bg-accent text-white hover:bg-opacity-90',
-    outline: 'border-2 border-primary text-primary hover:bg-primary hover:text-white',
+    primary: 'bg-primary text-white shadow-md hover:shadow-lg hover:brightness-110',
+    secondary: 'bg-peach text-burgundy hover:brightness-105 shadow-sm',
+    accent: 'bg-accent text-burgundy hover:brightness-110 shadow-sm',
+    outline: 'border border-burgundy text-burgundy bg-transparent hover:bg-burgundy hover:text-white',
     danger: 'bg-red-500 text-white hover:bg-red-600'
   };
 

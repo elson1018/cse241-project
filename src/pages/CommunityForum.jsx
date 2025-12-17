@@ -321,13 +321,13 @@ const CommunityForum = () => {
         {announcements.length > 0 && (
           <div className="mb-6 space-y-2">
             {announcements.slice(0, 3).map((announcement) => (
-              <Card key={announcement.id} className="bg-yellow-50 border-yellow-200">
+              <Card key={announcement.id} className="bg-accent/10 border border-accent/40">
                 <div className="flex items-start gap-3">
-                  <Volume2 className="text-yellow-600 mt-1" size={20} />
+                  <Volume2 className="text-accent mt-1" size={20} />
                   <div>
-                    <p className="font-semibold text-yellow-800">Announcement</p>
-                    <p className="text-sm text-yellow-700">{announcement.text}</p>
-                    <p className="text-xs text-yellow-600 mt-1">{announcement.date}</p>
+                    <p className="font-semibold text-text-main">Announcement</p>
+                    <p className="text-sm text-text-main/80">{announcement.text}</p>
+                    <p className="text-xs text-text-main/60 mt-1">{announcement.date}</p>
                   </div>
                 </div>
               </Card>
@@ -343,7 +343,7 @@ const CommunityForum = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search posts by keyword or tag..."
-            className="w-full pl-10 pr-4 py-3 border-2 border-accent rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white"
+            className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-primary bg-white shadow-sm"
           />
         </div>
 
@@ -356,7 +356,7 @@ const CommunityForum = () => {
               className={`px-4 py-2 rounded-lg font-semibold transition-all ${
                 selectedCategory === category
                   ? 'bg-primary text-white shadow-lg scale-105'
-                  : 'bg-white text-text-main border border-accent hover:bg-accent hover:bg-opacity-30'
+                  : 'bg-primary/5 text-text-main border border-transparent hover:bg-primary hover:text-white'
               }`}
             >
               {category}

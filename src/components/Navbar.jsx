@@ -47,11 +47,11 @@ const Navbar = () => {
   }
 
   return (
-    <nav className="bg-white shadow-md border-b-2 border-accent sticky top-0 z-40">
+    <nav className="bg-cream/90 backdrop-blur-sm sticky top-0 z-40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <Link to="/dashboard" className="flex items-center gap-2">
-            <span className="text-2xl font-bold text-primary">Wonder Women</span>
+            <span className="text-2xl font-bold text-burgundy">Wonder Women ✨</span>
           </Link>
 
           <div className="flex items-center gap-6">
@@ -65,7 +65,7 @@ const Navbar = () => {
                   className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${
                     isActive
                       ? 'bg-primary text-white'
-                      : 'text-text-main hover:bg-accent hover:bg-opacity-30'
+                      : 'text-burgundy hover:bg-peach hover:bg-opacity-80'
                   }`}
                 >
                   <Icon size={20} />
@@ -130,9 +130,9 @@ const Navbar = () => {
                   title="Edit Profile"
                 >
                   <img
-                    src={currentUser.avatar || `https://placehold.co/100x100/4E56C0/FFFFFF?text=${currentUser.name.charAt(0)}`}
+                    src={currentUser.avatar || `https://placehold.co/100x100/6A1B9A/FFFFFF?text=${currentUser.name.charAt(0)}`}
                     alt={currentUser.name}
-                    className="w-8 h-8 rounded-full"
+                    className="w-8 h-8 rounded-full ring-2 ring-accent ring-offset-2 ring-offset-white"
                   />
                   <div className="hidden md:block">
                     <p className="text-sm font-semibold text-text-main">{currentUser.name}</p>

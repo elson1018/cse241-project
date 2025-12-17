@@ -46,39 +46,49 @@ const UserDashboard = () => {
   return (
     <div className="min-h-screen bg-background py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-primary mb-2">Welcome back, {currentUser.name}!</h1>
-          <p className="text-text-main">Here's your activity overview</p>
+        <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+          <div>
+            <h1 className="text-4xl md:text-5xl font-bold text-burgundy mb-2">Welcome back, {currentUser.name}!</h1>
+            <p className="text-text-main text-lg">Here's your activity overview</p>
+          </div>
+          <div className="hidden md:block">
+            {/* Placeholder for future illustration */}
+            <div className="w-40 h-32 rounded-3xl bg-gradient-to-br from-peach via-primary/10 to-accent/20 flex items-center justify-center">
+              <span className="text-burgundy font-semibold text-sm text-center px-3">
+                Empowering your journey
+              </span>
+            </div>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card className="bg-gradient-to-br from-primary to-secondary text-white">
+          <Card className="bg-gradient-to-br from-peach to-primary text-white overflow-hidden relative">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-white opacity-90 mb-1">Enrolled Courses</p>
                 <p className="text-3xl font-bold">{enrolledCourses.length}</p>
               </div>
-              <BookOpen size={40} className="opacity-80" />
+              <BookOpen size={56} className="opacity-20" />
             </div>
           </Card>
 
-          <Card className="bg-gradient-to-br from-secondary to-accent text-white">
+          <Card className="bg-gradient-to-br from-primary to-secondary text-white overflow-hidden relative">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-white opacity-90 mb-1">Upcoming Meetings</p>
                 <p className="text-3xl font-bold">{upcomingMeetings.length}</p>
               </div>
-              <Calendar size={40} className="opacity-80" />
+              <Calendar size={56} className="opacity-20" />
             </div>
           </Card>
 
-          <Card className="bg-gradient-to-br from-accent to-primary text-white">
+          <Card className="bg-gradient-to-br from-accent to-primary text-white overflow-hidden relative">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-white opacity-90 mb-1">Total Orders</p>
                 <p className="text-3xl font-bold">{recentOrders.length}</p>
               </div>
-              <ShoppingBag size={40} className="opacity-80" />
+              <ShoppingBag size={56} className="opacity-20" />
             </div>
           </Card>
         </div>

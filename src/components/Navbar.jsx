@@ -1,7 +1,7 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { GraduationCap, Users, ShoppingBag, MessageSquare, Bell, LogOut } from 'lucide-react';
-import { useState } from 'react';
+import { useState , useEffect } from 'react';
 import Modal from './Modal';
 
 const Navbar = () => {
@@ -9,7 +9,8 @@ const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [showNotifications, setShowNotifications] = useState(false);
-
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  
   const navItems = [
     { path: '/learning', label: 'SkillUp Learning', icon: GraduationCap },
     { path: '/mentorship', label: 'Mentorship Match', icon: Users },
@@ -21,21 +22,30 @@ const Navbar = () => {
     n => n.userId === currentUser?.id && !n.read
   ) || [];
 
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
+  const handleConfirmLogout = async () => {
+    try {
+      await logout();
+      navigate('/login', {
+        state: { message: 'Logged out successfully!', type: 'success' }
+      });
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setShowLogoutModal(false);
+    }
   };
 
-  const markNotificationAsRead = (notificationId) => {
-    const updatedNotifications = appData.notifications.map(n =>
-      n.id === notificationId ? { ...n, read: true } : n
-    );
-    updateData('notifications', updatedNotifications);
-  };
 
-  if (!currentUser) {
-    return null; // Don't show navbar if not logged in
-  }
+const markNotificationAsRead = (notificationId) => {
+  const updatedNotifications = appData.notifications.map(n =>
+    n.id === notificationId ? { ...n, read: true } : n
+  );
+  updateData('notifications', updatedNotifications);
+};
+
+if (!currentUser) {
+  return null; // Don't show navbar if not logged in
+}
 
   return (
     <nav className="bg-white shadow-md border-b-2 border-accent sticky top-0 z-40">
@@ -131,7 +141,7 @@ const Navbar = () => {
                   </div>
                 </button>
                 <button
-                  onClick={handleLogout}
+                  onClick={() => setShowLogoutModal(true)}
                   className="p-2 text-text-main hover:bg-accent hover:bg-opacity-30 rounded-lg transition-colors"
                   title="Logout"
                 >
@@ -142,6 +152,36 @@ const Navbar = () => {
           </div>
         </div>
       </div>
+
+      {/* 2. ADDED MODAL: The confirmation popup */}
+      <Modal
+        isOpen={showLogoutModal}
+        onClose={() => setShowLogoutModal(false)}
+        title="Confirm Logout"
+      >
+        <div className="space-y-4">
+          <p className="text-text-main">
+            Are you sure you want to log out?
+          </p>
+          <div className="flex gap-3 justify-end pt-2">
+            <button
+              onClick={() => setShowLogoutModal(false)}
+              className="px-4 py-2 rounded-lg font-semibold text-primary border border-primary hover:bg-primary hover:text-white transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={() => {
+                setShowLogoutModal(false);
+                handleConfirmLogout();
+              }}
+              className="px-4 py-2 rounded-lg font-semibold bg-red-500 text-white hover:bg-red-600 transition-colors"
+            >
+              Logout
+            </button>
+          </div>
+        </div>
+      </Modal>
     </nav>
   );
 };

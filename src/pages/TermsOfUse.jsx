@@ -1,112 +1,92 @@
-import { useNavigate, useLocation } from 'react-router-dom';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, FileText } from 'lucide-react';
 
-const monthNames = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December"
-];
+// Assets
+import flowerDeco1 from '../assets/flower-deco1.jpg';
+import flowerDeco3 from '../assets/flower-deco3.jpg'; // Using a different flower for variety
 
 const TermsOfUse = () => {
-    const navigate = useNavigate();
-    const location = useLocation();
-    const now = new Date();
-    const month = monthNames[now.getMonth()];
-    const year = now.getFullYear();
-
-    const handleBack = () => {
-      // If there's a previous location in history, go back
-      // Otherwise, navigate to signup page
-      if (window.history.length > 1) {
-        navigate(-1);
-      } else {
-        navigate('/signup', { replace: false });
-      }
-    };
+  const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-background py-12 px-6">
-      <div className="max-w-3xl mx-auto bg-white p-8 rounded-xl shadow">
-        <div className="mb-6">
-          <Button
-            variant="outline"
-            onClick={handleBack}
-            className="mb-4"
+    <div className="min-h-screen bg-orange-50/30 relative overflow-hidden py-12 px-4 sm:px-6">
+
+      {/* --- BACKGROUND DECORATIONS --- */}
+      <img src={flowerDeco3} alt="" className="absolute -top-20 -left-20 w-80 h-auto opacity-10 pointer-events-none rotate-45" />
+      <img src={flowerDeco1} alt="" className="absolute bottom-0 right-0 w-64 h-auto opacity-10 pointer-events-none" />
+
+      <div className="max-w-4xl mx-auto relative z-10">
+
+        {/* Navigation Bar */}
+        <div className="mb-8">
+          <button
+            onClick={() => navigate(-1)}
+            className="flex items-center text-burgundy font-semibold hover:underline transition-all"
           >
-            <ArrowLeft size={18} className="inline mr-2" />
-            Back
-          </Button>
+            <ArrowLeft size={20} className="mr-2" /> Back
+          </button>
         </div>
-        <h1 className="text-3xl font-bold text-primary mb-6">Terms of Use</h1>
-        
-        <p className="mb-4 text-text-main">
-          By using the Wonder Women platform, you agree to the following terms and conditions.
-        </p>
 
-        <h2 className="text-xl font-semibold mt-6 mb-2">1. Acceptance of Terms</h2>
-        <p className="text-text-main mb-4">
-          By accessing and using this platform, you accept and agree to be bound by the terms and provision of this agreement.
-        </p>
+        {/* Main Document Card */}
+        <div className="bg-white rounded-2xl shadow-xl shadow-burgundy/5 p-8 md:p-12 border border-burgundy/10">
 
-        <h2 className="text-xl font-semibold mt-6 mb-2">2. User Responsibilities</h2>
-        <p className="text-text-main mb-3">
-          Users are responsible for:
-        </p>
-        <ul className="list-disc pl-6 mb-4 text-text-main">
-          <li>Maintaining the confidentiality of account credentials</li>
-          <li>Providing accurate and truthful information</li>
-          <li>Respecting other users and maintaining professional conduct</li>
-          <li>Complying with all applicable laws and regulations</li>
-        </ul>
+          <div className="flex items-center gap-4 mb-8 border-b border-gray-100 pb-6">
+            <div className="p-3 bg-burgundy/10 rounded-full">
+              <FileText className="text-burgundy h-8 w-8" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">Terms of Use</h1>
+              <p className="text-gray-500 text-sm">Please read these terms carefully.</p>
+            </div>
+          </div>
 
-        <h2 className="text-xl font-semibold mt-6 mb-2">3. Platform Usage</h2>
-        <p className="text-text-main mb-4">
-          The platform is intended for educational, mentorship, and business networking purposes. 
-          Users must not use the platform for any illegal or unauthorized purpose.
-        </p>
+          <div className="space-y-8 text-gray-700 leading-relaxed">
+            <section>
+              <h2 className="text-xl font-bold text-burgundy mb-3">1. Acceptance of Terms</h2>
+              <p>
+                By accessing or using the Wonder Women platform, you agree to be bound by these Terms of Use and all applicable laws and regulations. If you do not agree with any of these terms, you are prohibited from using or accessing this site.
+              </p>
+            </section>
 
-        <h2 className="text-xl font-semibold mt-6 mb-2">4. Content and Intellectual Property</h2>
-        <p className="text-text-main mb-4">
-          Users retain ownership of content they post. By posting content, users grant the platform 
-          a license to display and distribute such content within the platform.
-        </p>
+            <section>
+              <h2 className="text-xl font-bold text-burgundy mb-3">2. User Conduct</h2>
+              <p>
+                You agree to use the platform only for lawful purposes. You are strictly prohibited from:
+              </p>
+              <ul className="list-disc pl-5 mt-2 space-y-1">
+                <li>Harassing, abusing, or harming another person.</li>
+                <li>Impersonating any person or entity.</li>
+                <li>Posting content that is hateful, threatening, or pornographic.</li>
+              </ul>
+            </section>
 
-        <h2 className="text-xl font-semibold mt-6 mb-2">5. Prohibited Activities</h2>
-        <p className="text-text-main mb-3">
-          Users are prohibited from:
-        </p>
-        <ul className="list-disc pl-6 mb-4 text-text-main">
-          <li>Harassing, threatening, or abusing other users</li>
-          <li>Posting false, misleading, or fraudulent information</li>
-          <li>Violating any applicable laws or regulations</li>
-          <li>Attempting to gain unauthorized access to the platform</li>
-        </ul>
+            <section>
+              <h2 className="text-xl font-bold text-burgundy mb-3">3. Intellectual Property</h2>
+              <p>
+                The content, features, and functionality of Wonder Women (including text, graphics, and logos) are owned by us and are protected by international copyright, trademark, and other intellectual property laws.
+              </p>
+            </section>
 
-        <h2 className="text-xl font-semibold mt-6 mb-2">6. Termination</h2>
-        <p className="text-text-main mb-4">
-          We reserve the right to suspend or terminate accounts that violate these terms or engage 
-          in harmful behavior.
-        </p>
+            <section>
+              <h2 className="text-xl font-bold text-burgundy mb-3">4. Termination</h2>
+              <p>
+                We reserve the right to terminate or suspend your account immediately, without prior notice or liability, for any reason whatsoever, including without limitation if you breach the Terms.
+              </p>
+            </section>
+          </div>
 
-        <h2 className="text-xl font-semibold mt-6 mb-2">7. Limitation of Liability</h2>
-        <p className="text-text-main mb-4">
-          The platform is provided "as is" without warranties. We are not liable for any damages 
-          arising from the use of the platform.
-        </p>
+          <div className="mt-12 pt-8 border-t border-gray-100 flex justify-center">
+            <Button variant="primary" onClick={() => navigate(-1)} className="px-8 py-3 rounded-xl">
+              Accept & Continue
+            </Button>
+          </div>
 
-        <h2 className="text-xl font-semibold mt-6 mb-2">8. Changes to Terms</h2>
-        <p className="text-text-main mb-4">
-          We reserve the right to modify these terms at any time. Continued use of the platform 
-          constitutes acceptance of modified terms.
-        </p>
-
-        <p className="text-sm text-gray-600 mt-10">
-          Last updated: {month} {year}
-        </p>
+        </div>
       </div>
     </div>
   );
 };
 
 export default TermsOfUse;
-

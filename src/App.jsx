@@ -12,6 +12,7 @@ import CommunityForum from './pages/CommunityForum';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfUse from './pages/TermsOfUse';
 import EditProfile from './pages/EditProfile';
+import Footer from './components/Footer'
 
 const ProtectedRoute = ({ children }) => {
   const { currentUser } = useAuth();
@@ -22,7 +23,7 @@ function App() {
   return (
     <AuthProvider>
       <Router>
-        <div className="min-h-screen bg-background">
+        <div className="min-h-screen bg-background flex flex-col">
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
@@ -33,15 +34,18 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Navbar />
-                  <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/dashboard" element={<Dashboard />} />
-                    <Route path="/learning" element={<LearningHub />} />
-                    <Route path="/mentorship" element={<MentorshipMatch />} />
-                    <Route path="/marketplace" element={<Marketplace />} />
-                    <Route path="/forum" element={<CommunityForum />} />
-                    <Route path="/edit-profile" element={<EditProfile />} />
-                  </Routes>
+                  <div className="flex-grow">
+                     <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/dashboard" element={<Dashboard />} />
+                        <Route path="/learning" element={<LearningHub />} />
+                     <Route path="/mentorship" element={<MentorshipMatch />} />
+                        <Route path="/marketplace" element={<Marketplace />} />
+                        <Route path="/forum" element={<CommunityForum />} />
+                        <Route path="/edit-profile" element={<EditProfile />} />
+                     </Routes>
+                  </div>
+                  <Footer />
                 </ProtectedRoute>
               }
             />

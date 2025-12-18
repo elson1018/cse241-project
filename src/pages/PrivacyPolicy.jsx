@@ -1,94 +1,89 @@
-import { useNavigate, useLocation } from 'react-router-dom';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Shield } from 'lucide-react';
 
-const monthNames = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December"
-];
+// Assets
+import flowerDeco1 from '../assets/flower-deco1.jpg';
+import flowerDeco2 from '../assets/flower-deco2.jpg';
 
 const PrivacyPolicy = () => {
-    const navigate = useNavigate();
-    const location = useLocation();
-    const now = new Date();
-    const month = monthNames[now.getMonth()];
-    const year = now.getFullYear();
-
-    const handleBack = () => {
-      // If there's a previous location in history, go back
-      // Otherwise, navigate to signup page
-      if (window.history.length > 1) {
-        navigate(-1);
-      } else {
-        navigate('/signup', { replace: false });
-      }
-    };
+  const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-background py-12 px-6">
-      <div className="max-w-3xl mx-auto bg-white p-8 rounded-xl shadow">
-        <div className="mb-6">
-          <Button
-            variant="outline"
-            onClick={handleBack}
-            className="mb-4"
+    <div className="min-h-screen bg-orange-50/30 relative overflow-hidden py-12 px-4 sm:px-6">
+
+      {/* --- BACKGROUND DECORATIONS --- */}
+      <img src={flowerDeco1} alt="" className="absolute -top-10 -right-10 w-64 h-auto opacity-10 pointer-events-none rotate-12" />
+      <img src={flowerDeco2} alt="" className="absolute -bottom-10 -left-10 w-64 h-auto opacity-10 pointer-events-none -rotate-12" />
+
+      <div className="max-w-4xl mx-auto relative z-10">
+
+        {/* Navigation Bar */}
+        <div className="mb-8">
+          <button
+            onClick={() => navigate(-1)}
+            className="flex items-center text-burgundy font-semibold hover:underline transition-all"
           >
-            <ArrowLeft size={18} className="inline mr-2" />
-            Back
-          </Button>
+            <ArrowLeft size={20} className="mr-2" /> Back
+          </button>
         </div>
-        <h1 className="text-3xl font-bold text-primary mb-6">Privacy Policy</h1>
-        
-        <p className="mb-4 text-text-main">
-          This Privacy Policy explains how we collect, use, and protect your data when using the Wonder Women platform.
-        </p>
 
-        <h2 className="text-xl font-semibold mt-6 mb-2">1. Information We Collect</h2>
-        <p className="text-text-main mb-3">
-          We may collect personal information such as:
-        </p>
-        <ul className="list-disc pl-6 mb-4 text-text-main">
-          <li>Name</li>
-          <li>Username</li>
-          <li>Email (if provided)</li>
-          <li>Profile details such as bio, skills, or goals</li>
-        </ul>
+        {/* Main Document Card */}
+        <div className="bg-white rounded-2xl shadow-xl shadow-burgundy/5 p-8 md:p-12 border border-burgundy/10">
 
-        <h2 className="text-xl font-semibold mt-6 mb-2">2. How We Use Your Information</h2>
-        <p className="text-text-main mb-4">
-          Your information is used to:
-        </p>
-        <ul className="list-disc pl-6 mb-4 text-text-main">
-          <li>Create and manage your account</li>
-          <li>Support mentor–mentee interactions</li>
-          <li>Improve user experience and platform features</li>
-        </ul>
+          <div className="flex items-center gap-4 mb-8 border-b border-gray-100 pb-6">
+            <div className="p-3 bg-burgundy/10 rounded-full">
+              <Shield className="text-burgundy h-8 w-8" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">Privacy Policy</h1>
+              <p className="text-gray-500 text-sm">Last updated: December 18, 2024</p>
+            </div>
+          </div>
 
-        <h2 className="text-xl font-semibold mt-6 mb-2">3. Data Protection</h2>
-        <p className="text-text-main mb-4">
-          We take reasonable security measures to protect your information from unauthorized access.
-          However, no method is 100% secure.
-        </p>
+          <div className="space-y-8 text-gray-700 leading-relaxed">
+            <section>
+              <h2 className="text-xl font-bold text-burgundy mb-3">1. Information We Collect</h2>
+              <p>
+                At Wonder Women, we collect information you provide directly to us, such as when you create an account, update your profile, or communicate with other users. This may include your name, email address, bio, skills, and professional interests.
+              </p>
+            </section>
 
-        <h2 className="text-xl font-semibold mt-6 mb-2">4. Sharing of Information</h2>
-        <p className="text-text-main mb-4">
-          We do not sell or trade your personal data. Information may be shared only with mentors, mentees,
-          or entrepreneurs as part of the platform's core functions.
-        </p>
+            <section>
+              <h2 className="text-xl font-bold text-burgundy mb-3">2. How We Use Your Information</h2>
+              <p>
+                We use the information we collect to provide, maintain, and improve our services. This includes:
+              </p>
+              <ul className="list-disc pl-5 mt-2 space-y-1">
+                <li>Connecting mentors with mentees based on shared interests.</li>
+                <li>Personalizing your learning hub recommendations.</li>
+                <li>Sending you technical notices and support messages.</li>
+              </ul>
+            </section>
 
-        <h2 className="text-xl font-semibold mt-6 mb-2">5. Your Rights</h2>
-        <p className="text-text-main mb-4">
-          You may request to update or remove your account information at any time.
-        </p>
+            <section>
+              <h2 className="text-xl font-bold text-burgundy mb-3">3. Data Security</h2>
+              <p>
+                We implement appropriate technical and organizational measures to protect your personal information against accidental or unlawful destruction, loss, alteration, or unauthorized disclosure.
+              </p>
+            </section>
 
-        <h2 className="text-xl font-semibold mt-6 mb-2">6. Updates to This Policy</h2>
-        <p className="text-text-main mb-4">
-          We may update this Privacy Policy occasionally. You will be notified of major changes.
-        </p>
+            <section>
+              <h2 className="text-xl font-bold text-burgundy mb-3">4. Contact Us</h2>
+              <p>
+                If you have any questions about this Privacy Policy, please contact us at <span className="font-semibold text-burgundy">support@wonderwomen.com</span>.
+              </p>
+            </section>
+          </div>
 
-        <p className="text-sm text-gray-600 mt-10">
-          Last updated: {month} {year}
-        </p>
+          <div className="mt-12 pt-8 border-t border-gray-100 flex justify-center">
+            <Button variant="primary" onClick={() => navigate(-1)} className="px-8 py-3 rounded-xl">
+              I Understand
+            </Button>
+          </div>
+
+        </div>
       </div>
     </div>
   );

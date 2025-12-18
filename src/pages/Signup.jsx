@@ -159,7 +159,11 @@ const Signup = () => {
 
         {/* Branding Overlay */}
         <div className="absolute top-8 left-8 z-10 flex items-center gap-4 animate-fadeIn delay-100">
-            <img src={logoImg} alt="Wonder Women Logo" className="h-14 w-auto object-contain drop-shadow-lg"/>
+             <img
+               src="/src/assets/logo.png"
+               alt="Logo"
+               className="w-32 h-32 inline-block xl:w-36 xl:h-36 flex-shrink-0 drop-shadow-lg"
+             />
              <div>
                 <h1 className="text-white font-bold text-3xl tracking-wider uppercase drop-shadow-md">Wonder Women</h1>
                 <p className="text-white/90 text-sm tracking-widest font-medium drop-shadow-sm">Join the Community.</p>
@@ -216,7 +220,7 @@ const Signup = () => {
 
                 <div>
                   <label htmlFor="username" className={labelClasses}>Username</label>
-                  <input id="username" name="username" type="text" value={formData.username} onChange={handleChange} required className={inputClasses} placeholder="Choose a username" />
+                  <input id="username" name="username" type="text" value={formData.username} onChange={handleChange} required className={inputClasses} placeholder="Enter a username..." />
                 </div>
 
                 <div>
@@ -242,7 +246,7 @@ const Signup = () => {
                         </div>
                     </div>
                     <div>
-                        <label htmlFor="confirmPassword" className={labelClasses}>Confirm</label>
+                        <label htmlFor="confirmPassword" className={labelClasses}>Confirm Password</label>
                         <div className="relative">
                             <input id="confirmPassword" name="confirmPassword" type={showConfirmPassword ? 'text' : 'password'} value={formData.confirmPassword} onChange={handleChange} required className={inputClasses} placeholder="••••••" />
                             <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-burgundy/50 hover:text-burgundy"><Eye size={18} /></button>

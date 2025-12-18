@@ -5,6 +5,8 @@ import Button from '../components/Button';
 import Modal from '../components/Modal';
 import Toast from '../components/Toast';
 import { LogIn, Eye, EyeOff, Sparkles } from 'lucide-react';
+import { FcGoogle } from 'react-icons/fc';
+import { FaApple } from 'react-icons/fa';
 
 // --- ASSETS ---
 import heroWomanImg from '../assets/hero-woman.jpg';
@@ -63,9 +65,11 @@ const Login = () => {
 
         {/* Branding Overlay */}
         <div className="absolute top-8 left-8 z-10 flex items-center gap-3 animate-fadeIn delay-100">
-            <div className="p-2 bg-white/20 backdrop-blur-md rounded-lg shadow-lg border border-white/10">
-                <Sparkles className="text-white h-6 w-6" />
-            </div>
+             <img
+              src="/src/assets/logo.png"
+              alt="Logo"
+              className="w-32 h-32 xl:w-36 xl:h-36 flex-shrink-0 drop-shadow-lg"
+             />
              <div>
                 <h1 className="text-white font-bold text-3xl tracking-wider uppercase drop-shadow-md">Wonder Women</h1>
                 <p className="text-white/90 text-xs tracking-widest font-medium">Empower. Connect. Lead.</p>
@@ -86,9 +90,11 @@ const Login = () => {
 
           {/* Header (Slides in first) */}
           <div className="text-center mb-10 animate-slideUp" style={{ animationDelay: '0.1s' }}>
-            <div className="inline-block p-3 rounded-full bg-burgundy/5 mb-4">
-                <Sparkles size={32} className="text-burgundy" />
-            </div>
+            <img
+               src="/src/assets/logo.png"
+               alt="Logo"
+               className="w-32 h-32 inline-block xl:w-36 xl:h-36 flex-shrink-0 drop-shadow-lg"
+            />
             <h2 className="text-4xl font-extrabold text-burgundy mb-2 tracking-tight">
               Welcome Back
             </h2>
@@ -144,11 +150,11 @@ const Login = () => {
 
               <div className="mt-6 grid grid-cols-2 gap-3">
                 <button type="button" className="w-full inline-flex justify-center py-2.5 px-4 border border-gray-200 rounded-xl shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 transition-colors">
-                  <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.748L12.545,10.239z"/></svg>
+                  <FcGoogle size={20} />
                   <span className="ml-2">Google</span>
                 </button>
                 <button type="button" className="w-full inline-flex justify-center py-2.5 px-4 border border-gray-200 rounded-xl shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 transition-colors">
-                  <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M17.05,20.28c-0.98,0.97-2.53,0.86-3.35-0.54l-0.5-0.84c-0.34-0.58-0.94-0.91-1.61-0.91c-0.65,0-1.28,0.36-1.61,0.92l-0.52,0.88c-0.83,1.36-2.34,1.46-3.3,0.5c-0.26-0.26-0.45-0.57-0.57-0.91c-0.68-1.92,1.32-8.08,5.92-8.08c1.32,0,2.5,0.44,3.29,1.08c0.8-0.62,1.96-1.07,3.25-1.07c4.35,0,6.56,6.23,5.93,8.08C23.08,20.89,19.34,22.56,17.05,20.28z M12.03,7.25c-0.12-2.84,2.22-5.21,5.1-5.25C17.29,4.98,14.93,7.34,12.03,7.25z"/></svg>
+                  <FaApple size={20} />
                   <span className="ml-2">Apple</span>
                 </button>
               </div>
@@ -170,9 +176,31 @@ const Login = () => {
         </div>
       </div>
 
-      <Modal isOpen={showPrivacyModal} onClose={() => setShowPrivacyModal(false)} title="Privacy & Policy">
-        <div className="space-y-4 text-gray-800"><p className="text-sm">Privacy content...</p><div className="pt-4"><Button variant="primary" onClick={() => setShowPrivacyModal(false)} className="w-full">I Understand</Button></div></div>
+      <Modal
+        isOpen={showPrivacyModal}
+        onClose={() => setShowPrivacyModal(false)}
+        title="Privacy & Policy"
+      >
+        <div className="space-y-4 text-gray-800">
+          <p className="text-sm">
+            Please review our Privacy Policy to understand how we handle your data.
+          </p>
+
+          <div className="pt-4">
+            <Button
+              variant="primary"
+              className="w-full"
+              onClick={() => {
+                setShowPrivacyModal(false);
+                navigate('/privacy-policy');
+              }}
+            >
+              View Privacy & Policy
+            </Button>
+          </div>
+        </div>
       </Modal>
+
 
       {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react'; // Import useState and useEffect
 import { Link } from 'react-router-dom';
 import {
   Facebook, Twitter, Instagram, Linkedin, Mail, MapPin, Phone,
@@ -9,6 +9,26 @@ import {
 import flowerDeco2 from '../assets/flower-deco2.jpg';
 
 const Footer = () => {
+  // State to track if the button should be visible
+  const [showScrollButton, setShowScrollButton] = useState(false);
+
+  // Function to handle scrolling
+  useEffect(() => {
+    const handleScroll = () => {
+      // If user scrolls down more than 300px, show the button
+      if (window.scrollY > 300) {
+        setShowScrollButton(true);
+      } else {
+        setShowScrollButton(false);
+      }
+    };
+
+    // Add event listener
+    window.addEventListener('scroll', handleScroll);
+
+    // Clean up event listener on component unmount
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const scrollToTop = () => {
     window.scrollTo({
@@ -18,17 +38,17 @@ const Footer = () => {
   };
 
   return (
-    <footer className="relative bg-gradient-to-b from-[#5D182E] to-[#3a0d1b] text-pink-50 pt-24 pb-12 overflow-hidden font-sans">
+    <footer className="relative bg-[#4A1D24] text-pink-50 pt-24 pb-12 overflow-hidden font-sans">
 
       {/* --- BACKGROUND DECORATIONS --- */}
       {/* Flower */}
       <img
         src={flowerDeco2}
         alt=""
-        className="absolute bottom-0 right-0 w-[600px] h-auto opacity-10 pointer-events-none mix-blend-screen rotate-12 translate-x-20 translate-y-20 blur-[2px]"
+        className="absolute bottom-0 right-0 w-[600px] h-auto opacity-5 pointer-events-none mix-blend-screen rotate-12 translate-x-20 translate-y-20 blur-[2px]"
       />
       {/* Glow Effect */}
-      <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-pink-500/10 via-transparent to-transparent pointer-events-none"></div>
+      <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-[#4A1D24]/30 via-transparent to-transparent pointer-events-none"></div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
@@ -90,7 +110,7 @@ const Footer = () => {
 
         {/* ================= SECTION 3: TESTIMONIALS (Full Width) ================= */}
         <div className="mb-20 pb-16 border-b border-pink-500/20 relative">
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#5D182E] px-4">
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#4A1D24] px-4">
                  {/* Decorative divider label */}
             </div>
             <div className="text-center mb-12">
@@ -157,7 +177,7 @@ const Footer = () => {
                     placeholder="Enter your email address"
                     className="w-full px-6 py-4 rounded-full bg-black/20 border border-pink-500/30 text-white placeholder-pink-200/50 focus:outline-none focus:bg-black/40 focus:border-pink-400 transition-all backdrop-blur-md shadow-inner"
                 />
-                <button className="px-10 py-4 bg-gradient-to-r from-pink-600 to-burgundy hover:from-pink-500 hover:to-pink-700 text-white font-bold rounded-full shadow-lg shadow-pink-900/40 transition-transform hover:-translate-y-1 active:scale-95">
+                <button className="px-10 py-4 bg-pink-500 hover:bg-pink-600 text-white font-bold rounded-full transition-colors shadow-lg shadow-pink-900/20">
                     Subscribe
                 </button>
             </div>
@@ -234,23 +254,25 @@ const Footer = () => {
         </div>
 
         {/* ================= COPYRIGHT & BACK TO TOP ================= */}
-        <div className="border-t border-pink-500/10 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-pink-100/30 relative">
-          <p>&copy; {new Date().getFullYear()} Wonder Women. All rights reserved.</p>
+        {/* CHANGED: justify-between -> justify-center (Centers everything in this row) */}
+        <div className="border-t border-pink-500/10 pt-8 flex flex-col items-center justify-center text-xs text-pink-100/30">
 
-          {/* Made With Love Badge */}
-          <div className="flex items-center gap-2 mt-4 md:mt-0 bg-black/20 px-4 py-1.5 rounded-full border border-white/5 backdrop-blur-sm">
-            <span>Made with</span>
-            <Heart size={12} className="text-red-400 fill-current animate-pulse" />
-            <span>for SDG 5</span>
+          {/* CHANGED: justify-center (Centers the text group) */}
+          <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 w-full">
+            <p>&copy; {new Date().getFullYear()} Wonder Women. All rights reserved.</p>
+            <div className="flex items-center gap-2 bg-black/20 px-4 py-1.5 rounded-full border border-white/5 backdrop-blur-sm">
+              <span>Made with</span>
+              <Heart size={12} className="text-red-400 fill-current animate-pulse" />
+              <span>for SDG 5</span>
+            </div>
           </div>
 
-          {/* --- BACK TO TOP BUTTON --- */}
           <button
             onClick={scrollToTop}
-            className="absolute -top-6 right-0 md:static md:ml-6 w-10 h-10 bg-pink-500 hover:bg-pink-400 rounded-full flex items-center justify-center text-white shadow-lg shadow-pink-500/30 transition-all hover:-translate-y-1 animate-bounce duration-[2000ms]"
+            className={`fixed bottom-10 right-10 z-50 w-12 h-12 bg-pink-500 hover:bg-pink-400 rounded-full flex items-center justify-center text-white shadow-lg shadow-pink-500/30 transition-all duration-300 hover:-translate-y-1 animate-bounce ${showScrollButton ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'}`}
             title="Back to Top"
           >
-            <ArrowUp size={20} />
+            <ArrowUp size={24} />
           </button>
         </div>
 

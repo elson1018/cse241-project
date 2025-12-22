@@ -25,7 +25,8 @@ const Signup = () => {
     industry: '',
     skills: [],
     experience: '',
-    goals: ''
+    goals: '',
+    agreement: false // Added default false to avoid uncontrolled input warning
   });
   const [skillInput, setSkillInput] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -34,17 +35,24 @@ const Signup = () => {
   const { signup, appData } = useAuth();
   const navigate = useNavigate();
 
-  // Restore form data from sessionStorage on mount
+  // 1. Restore form data AND step from sessionStorage on mount
   useEffect(() => {
     const savedFormData = sessionStorage.getItem('signupFormData');
+    const savedStep = sessionStorage.getItem('signupStep');
+
     if (savedFormData) {
       try {
-        const parsed = JSON.parse(savedFormData);
-        setFormData(parsed);
-        if (parsed.name && parsed.username && parsed.password) {
-          if (parsed.bio || parsed.agreement) {
+        const parsedData = JSON.parse(savedFormData);
+        setFormData(prev => ({ ...prev, ...parsedData })); // Merge to ensure all keys exist
+        
+        // Restore step if available, otherwise guess based on data
+        if (savedStep) {
+          setCurrentStep(parseInt(savedStep));
+        } else if (parsedData.name && parsedData.username && parsedData.password) {
+           // Fallback logic if step wasn't saved specifically
+          if (parsedData.bio || parsedData.agreement) {
             setCurrentStep(3);
-          } else if (parsed.industry || parsed.experience || parsed.age || parsed.goals) {
+          } else if (parsedData.industry || parsedData.experience || parsedData.age || parsedData.goals) {
             setCurrentStep(2);
           }
         }
@@ -54,8 +62,15 @@ const Signup = () => {
     }
   }, []);
 
+  // 2. Auto-save form data AND step to sessionStorage whenever they change
+  useEffect(() => {
+    sessionStorage.setItem('signupFormData', JSON.stringify(formData));
+    sessionStorage.setItem('signupStep', currentStep.toString());
+  }, [formData, currentStep]);
+
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+    setFormData({ ...formData, [e.target.name]: value });
   };
 
   const handleAddSkill = () => {
@@ -129,7 +144,9 @@ const Signup = () => {
 
     if (result.success) {
       setToast({ message: 'Account created successfully!', type: 'success' });
-      sessionStorage.removeItem('signupFormData'); // Clear storage
+      // Clear storage on success so next signup starts fresh
+      sessionStorage.removeItem('signupFormData');
+      sessionStorage.removeItem('signupStep');
       setTimeout(() => {
         navigate('/dashboard');
       }, 500);
@@ -160,7 +177,7 @@ const Signup = () => {
         {/* Branding Overlay */}
         <div className="absolute top-8 left-8 z-10 flex items-center gap-4 animate-fadeIn delay-100">
              <img
-               src="/src/assets/logo.png"
+               src={logoImg}
                alt="Logo"
                className="w-32 h-32 inline-block xl:w-36 xl:h-36 flex-shrink-0 drop-shadow-lg"
              />
@@ -170,7 +187,7 @@ const Signup = () => {
              </div>
         </div>
 
-        {/* Motivational Quote (Optional Extra Feature) */}
+        {/* Motivational Quote */}
         <div className="absolute bottom-12 left-12 right-12 text-white z-10 animate-slideUp" style={{animationDelay: '0.5s'}}>
             <p className="text-2xl font-serif italic leading-relaxed">"There is no limit to what we, as women, can accomplish."</p>
             <p className="mt-4 font-bold uppercase tracking-widest text-sm">— Michelle Obama</p>
@@ -299,7 +316,6 @@ const Signup = () => {
 
                 {formData.role === 'mentor' && (
                     <>
-                    {/* Simplified Mentor View for brevity - uses same styling */}
                      <div><label htmlFor="industry" className={labelClasses}>Industry *</label><input id="industry" name="industry" type="text" value={formData.industry} onChange={handleChange} required className={inputClasses} /></div>
                      <div><label htmlFor="experience" className={labelClasses}>Experience *</label><textarea id="experience" name="experience" value={formData.experience} onChange={handleChange} required rows={4} className={inputClasses} placeholder="Share your professional journey..." /></div>
                     </>
@@ -335,16 +351,16 @@ const Signup = () => {
                         name="agreement"
                         type="checkbox"
                         checked={formData.agreement || false}
-                        onChange={(e) => setFormData({ ...formData, agreement: e.target.checked })}
+                        onChange={handleChange}
                         className="h-5 w-5 rounded border-burgundy/30 text-burgundy focus:ring-burgundy cursor-pointer"
                         required
                     />
                   </div>
                   <label htmlFor="agreement" className="text-sm text-gray-600">
                     I agree to the{' '}
-                    <Link to="/privacy-policy" className="font-bold text-burgundy hover:underline" onClick={() => sessionStorage.setItem('signupFormData', JSON.stringify(formData))}>Privacy Policy</Link>
+                    <Link to="/privacy-policy" className="font-bold text-burgundy hover:underline">Privacy Policy</Link>
                     {' '}and{' '}
-                    <Link to="/terms-of-use" className="font-bold text-burgundy hover:underline" onClick={() => sessionStorage.setItem('signupFormData', JSON.stringify(formData))}>Terms of Use</Link>.
+                    <Link to="/terms-of-use" className="font-bold text-burgundy hover:underline">Terms of Use</Link>.
                   </label>
                 </div>
 

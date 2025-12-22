@@ -15,10 +15,15 @@ export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [appData, setAppData] = useState(data);
 
-  // Load data from JSON on mount
+  // Load data on mount
   useEffect(() => {
-    setAppData(data);
-    // Check if user is logged in (from localStorage)
+    const savedData = localStorage.getItem('appData');
+    if (savedData) {
+      setAppData(JSON.parse(savedData));
+    } else {
+      setAppData(data);
+    }
+
     const savedUser = localStorage.getItem('currentUser');
     if (savedUser) {
       setCurrentUser(JSON.parse(savedUser));
@@ -26,12 +31,12 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = (username, password) => {
+    // Search in appData (which might contain users loaded from localStorage)
     const user = appData.users.find(
       u => u.username === username && u.password === password
     );
     
     if (user) {
-      // Check if user is banned
       if (user.status === 'banned' || user.isBanned) {
         return { success: false, error: 'Your account has been banned. Please contact support.' };
       }
@@ -56,8 +61,17 @@ export const AuthProvider = ({ children }) => {
       avatar: `https://placehold.co/100x100/4E56C0/FFFFFF?text=${userData.name.charAt(0)}`
     };
     
+    // 1. Create the new list of users
     const updatedUsers = [...appData.users, newUser];
-    setAppData(prev => ({ ...prev, users: updatedUsers }));
+    
+    // 2. Create the new full data object
+    const newAppData = { ...appData, users: updatedUsers };
+
+    // 3. Update State
+    setAppData(newAppData);
+    
+    // 4. SAVE TO LOCAL STORAGE (This was missing!)
+    localStorage.setItem('appData', JSON.stringify(newAppData));
     
     setCurrentUser(newUser);
     localStorage.setItem('currentUser', JSON.stringify(newUser));
@@ -71,16 +85,29 @@ export const AuthProvider = ({ children }) => {
   };
 
   const updateData = (key, value) => {
-    setAppData(prev => ({
-      ...prev,
-      [key]: value
-    }));
+    setAppData(prev => {
+      const newData = {
+        ...prev,
+        [key]: value
+      };
+      // Save any other data changes to storage too
+      localStorage.setItem('appData', JSON.stringify(newData));
+      return newData;
+    });
   };
 
   const updateCurrentUser = (userData) => {
     const updatedUser = { ...currentUser, ...userData };
     setCurrentUser(updatedUser);
     localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+    
+    // Also update the user inside the main appData list
+    const updatedUsers = appData.users.map(u => 
+      u.id === currentUser.id ? { ...u, ...userData } : u
+    );
+    const newAppData = { ...appData, users: updatedUsers };
+    setAppData(newAppData);
+    localStorage.setItem('appData', JSON.stringify(newAppData));
   };
 
   const value = {
@@ -93,11 +120,10 @@ export const AuthProvider = ({ children }) => {
     setAppData,
     updateCurrentUser
   };
-
+    
   return (
     <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );
 };
-

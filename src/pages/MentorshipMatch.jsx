@@ -30,9 +30,11 @@ const MentorshipMatch = () => {
   const meetings = appData.meetings || [];
   const feedbacks = appData.feedbacks || [];
 
-  // Get all mentors (approved)
-  const mentors = users.filter(u => u.role === 'mentor' && u.isApproved);
-  const mentees = users.filter(u => u.role === 'mentee');
+  // Get all mentors
+  const mentors = users.filter(u => u.role === 'mentor' && u.isApproved && u.id !== currentUser.id);
+  
+  // Get all mentees
+  const mentees = users.filter(u => u.role === 'mentee' && u.id !== currentUser.id);
 
   // Get industries and skills from mentors
   const industries = ['All', ...new Set(mentors.map(m => m.industry).filter(Boolean))];

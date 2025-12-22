@@ -338,60 +338,85 @@ const MentorshipMatch = () => {
                 />
               </div>
             </div>
-
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredMentors.map((mentor) => (
-                <Card key={mentor.id}>
-                  <div className="flex items-center gap-4 mb-4">
-                    <img
-                      src={mentor.avatar || `https://placehold.co/150x150/4E56C0/FFFFFF?text=${mentor.name.charAt(0)}`}
-                      alt={mentor.name}
-                      className="w-16 h-16 rounded-full object-cover"
-                    />
-                    <div>
-                      <h3 className="text-xl font-bold text-primary">{mentor.name}</h3>
-                      <p className="text-sm text-gray-600">{mentor.industry}</p>
+              {filteredMentors.map((mentor) => {
+                // CHECK STATUS: Find if there's an existing request between current user and this mentor
+                const request = mentorshipRequests.find(
+                  req => req.mentorId === mentor.id && req.menteeId === currentUser.id
+                );
+
+                return (
+                  <Card key={mentor.id}>
+                    <div className="flex items-center gap-4 mb-4">
+                      <img
+                        src={mentor.avatar || `https://placehold.co/150x150/4E56C0/FFFFFF?text=${mentor.name.charAt(0)}`}
+                        alt={mentor.name}
+                        className="w-16 h-16 rounded-full object-cover"
+                      />
+                      <div>
+                        <h3 className="text-xl font-bold text-primary">{mentor.name}</h3>
+                        <p className="text-sm text-gray-600">{mentor.industry}</p>
+                      </div>
                     </div>
-                  </div>
-                  <div className="mb-4">
-                    <p className="text-sm text-text-main mb-2">{mentor.bio}</p>
-                    {mentor.experience && (
-                      <p className="text-xs text-gray-600 mb-2">Experience: {mentor.experience}</p>
-                    )}
-                    {mentor.availability && (
-                      <p className="text-xs text-gray-600">Available: {mentor.availability.join(', ')}</p>
-                    )}
-                  </div>
-                  <div className="mb-4 flex flex-wrap gap-2">
-                    {(mentor.skills || []).map((skill, idx) => (
-                      <span key={idx} className="px-2 py-1 bg-accent bg-opacity-30 text-secondary rounded text-xs font-semibold">
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
-                  <div className="flex gap-2">
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        setSelectedUser(mentor);
-                        setShowProfileModal(true);
-                      }}
-                      className="flex-1"
-                    >
-                      View Profile
-                    </Button>
-                    <RoleWrapper allowedRoles={['mentee']}>
+                    <div className="mb-4">
+                      <p className="text-sm text-text-main mb-2">{mentor.bio}</p>
+                      {mentor.experience && (
+                        <p className="text-xs text-gray-600 mb-2">Experience: {mentor.experience}</p>
+                      )}
+                      {mentor.availability && (
+                        <p className="text-xs text-gray-600">Available: {mentor.availability.join(', ')}</p>
+                      )}
+                    </div>
+                    <div className="mb-4 flex flex-wrap gap-2">
+                      {(mentor.skills || []).map((skill, idx) => (
+                        <span key={idx} className="px-2 py-1 bg-accent bg-opacity-30 text-secondary rounded text-xs font-semibold">
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                    <div className="flex gap-2">
                       <Button
-                        variant="primary"
-                        onClick={() => handleRequestConnection(mentor.id)}
+                        variant="outline"
+                        onClick={() => {
+                          setSelectedUser(mentor);
+                          setShowProfileModal(true);
+                        }}
                         className="flex-1"
                       >
-                        Request Connection
+                        View Profile
                       </Button>
-                    </RoleWrapper>
-                  </div>
-                </Card>
-              ))}
+                      <RoleWrapper allowedRoles={['mentee']}>
+                        {/* CONDITIONAL RENDERING BASED ON STATUS */}
+                        {request?.status === 'connected' ? (
+                          <Button
+                            variant="secondary"
+                            disabled
+                            className="flex-1 opacity-80 cursor-default bg-green-100 text-green-700 border-green-200"
+                          >
+                            <Check size={16} className="inline mr-1" /> Connected
+                          </Button>
+                        ) : request?.status === 'pending' ? (
+                          <Button
+                            variant="secondary"
+                            disabled
+                            className="flex-1 opacity-60 cursor-not-allowed"
+                          >
+                            Request Sent
+                          </Button>
+                        ) : (
+                          <Button
+                            variant="primary"
+                            onClick={() => handleRequestConnection(mentor.id)}
+                            className="flex-1"
+                          >
+                            Request Connection
+                          </Button>
+                        )}
+                      </RoleWrapper>
+                    </div>
+                  </Card>
+                );
+              })}
             </div>
           </>
         )}

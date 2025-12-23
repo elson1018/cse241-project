@@ -1,12 +1,17 @@
-import React, { useState, useEffect } from 'react'; // Import useState and useEffect
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Facebook, Twitter, Instagram, Linkedin, Mail, MapPin, Phone,
   Heart, Target, Eye, Sparkles, Globe, Smile, Users, Quote, ArrowUp
 } from 'lucide-react';
 
-// Assets
+// --- ASSETS ---
 import flowerDeco2 from '../assets/flower-deco2.jpg';
+// Import all team member photos
+import elsonPic from '../assets/elsonooiyinfeng.jpg';
+import ivanPic from '../assets/ivanlimzhengxian.jpg';
+import hanlimPic from '../assets/hanlim.jpg';
+import junhaoPic from '../assets/laujunhao.jpg';
 
 const Footer = () => {
   // State to track if the button should be visible
@@ -138,7 +143,7 @@ const Footer = () => {
             </div>
         </div>
 
-        {/* ================= SECTION 4: MEET THE INNOVATORS ================= */}
+        {/* ================= SECTION 4: MEET THE INNOVATORS (UPDATED) ================= */}
         <div className="mb-20 pb-16 border-b border-pink-500/20">
             <div className="text-center mb-12">
                  <h3 className="text-3xl font-bold text-white font-serif">Meet the <span className="text-pink-300">Innovators</span></h3>
@@ -146,15 +151,25 @@ const Footer = () => {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
                 {[
-                    { name: "Ivan Lim", role: "Project Leader", initials: "Ivan", color: "from-pink-500 to-red-500" },
-                    { name: "Elson Ooi", role: "Software Engineer", initials: "Elson", color: "from-blue-500 to-indigo-500" },
-                    { name: "Yap Han lim", role: "Software Engineer", initials: "Yap", color: "from-purple-500 to-violet-500" },
-                    { name: "Lau Jun Hao", role: "Business Analyst", initials: "Lau", color: "from-green-400 to-emerald-600" }
+                    // UPDATED: All team members now have their respective images
+                    { name: "Ivan Lim", role: "Project Leader", initials: "Ivan", image: ivanPic, color: "from-pink-500 to-red-500" },
+                    { name: "Elson Ooi", role: "Software Engineer", initials: "Elson", image: elsonPic, color: "from-blue-500 to-indigo-500" },
+                    { name: "Yap Han lim", role: "Software Engineer", initials: "Yap", image: hanlimPic, color: "from-purple-500 to-violet-500" },
+                    { name: "Lau Jun Hao", role: "Business Analyst", initials: "Lau", image: junhaoPic, color: "from-green-400 to-emerald-600" }
                 ].map((member, i) => (
                     <div key={i} className="group flex flex-col items-center p-6 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 cursor-pointer">
-                        <div className={`w-20 h-20 rounded-full bg-gradient-to-br ${member.color} flex items-center justify-center font-bold text-white text-2xl mb-4 shadow-lg`}>
-                            {member.initials}
-                        </div>
+                        {/* CONDITIONAL: If image exists, show image. Else show initials gradient */}
+                        {member.image ? (
+                             <img
+                               src={member.image}
+                               alt={member.name}
+                               className="w-20 h-20 rounded-full object-cover mb-4 shadow-lg border-2 border-transparent group-hover:border-pink-400 transition-all"
+                             />
+                        ) : (
+                            <div className={`w-20 h-20 rounded-full bg-gradient-to-br ${member.color} flex items-center justify-center font-bold text-white text-2xl mb-4 shadow-lg`}>
+                                {member.initials}
+                            </div>
+                        )}
                         <p className="font-bold text-white text-lg">{member.name}</p>
                         <p className="text-sm text-pink-300/80">{member.role}</p>
                     </div>
@@ -254,10 +269,8 @@ const Footer = () => {
         </div>
 
         {/* ================= COPYRIGHT & BACK TO TOP ================= */}
-        {/* CHANGED: justify-between -> justify-center (Centers everything in this row) */}
         <div className="border-t border-pink-500/10 pt-8 flex flex-col items-center justify-center text-xs text-pink-100/30">
 
-          {/* CHANGED: justify-center (Centers the text group) */}
           <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 w-full">
             <p>&copy; {new Date().getFullYear()} Wonder Women. All rights reserved.</p>
             <div className="flex items-center gap-2 bg-black/20 px-4 py-1.5 rounded-full border border-white/5 backdrop-blur-sm">

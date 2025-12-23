@@ -88,6 +88,146 @@
         { "id": 4, "title": "Build Your First App", "content": "Create a complete web application using HTML, CSS, and React.", "type": "assignment" }
       ],
       "reviews": []
+    },
+    {
+      "id": 103,
+      "title": "Women Entrepreneurship Fundamentals",
+      "category": "Business",
+      "instructor": "Nur Aisyah Karim",
+      "description": "Learn how to start, manage, and grow a women-led business from scratch.",
+      "image": "https://placehold.co/600x400/EC4899/FFFFFF?text=Entrepreneurship",
+      "modules": [
+        { "id": 1, "title": "Business Ideas & Validation", "content": "How to identify and validate business ideas.", "type": "video" },
+        { "id": 2, "title": "Business Models", "content": "Understanding different business models.", "type": "reading" },
+        { "id": 3, "title": "Startup Quiz", "content": "Test your startup knowledge.", "type": "quiz" }
+      ],
+      "reviews": []
+    },
+    {
+      "id": 104,
+      "title": "Women in Technology: Getting Started",
+      "category": "Technology",
+      "instructor": "Jessica Lim",
+      "description": "A beginner-friendly introduction to technology careers for women.",
+      "image": "https://placehold.co/600x400/6366F1/FFFFFF?text=Women+in+Tech",
+      "modules": [
+        { "id": 1, "title": "Tech Careers Overview", "content": "Explore roles in tech.", "type": "video" },
+        { "id": 2, "title": "Basic Tech Skills", "content": "Learn essential digital skills.", "type": "reading" },
+        { "id": 3, "title": "Career Path Quiz", "content": "Find your tech interest.", "type": "quiz" }
+      ],
+      "reviews": []
+    },
+    {
+      "id": 105,
+      "title": "Public Speaking & Confidence for Women",
+      "category": "Communication",
+      "instructor": "Farah Nadia",
+      "description": "Build confidence and master public speaking in professional settings.",
+      "image": "https://placehold.co/600x400/F59E0B/FFFFFF?text=Public+Speaking",
+      "modules": [
+        { "id": 1, "title": "Overcoming Fear", "content": "Handling stage anxiety.", "type": "video" },
+        { "id": 2, "title": "Effective Speech Structure", "content": "Organize impactful speeches.", "type": "reading" },
+        { "id": 3, "title": "Speech Quiz", "content": "Test communication basics.", "type": "quiz" }
+      ],
+      "reviews": []
+    },
+    {
+      "id": 106,
+      "title": "Financial Literacy for Women",
+      "category": "Finance",
+      "instructor": "Siti Nur Amalina",
+      "description": "Gain control over personal and business finances.",
+      "image": "https://placehold.co/600x400/10B981/FFFFFF?text=Financial+Literacy",
+      "modules": [
+        { "id": 1, "title": "Budgeting Basics", "content": "Manage income and expenses.", "type": "video" },
+        { "id": 2, "title": "Savings & Investment", "content": "Plan for financial growth.", "type": "reading" },
+        { "id": 3, "title": "Finance Quiz", "content": "Check your money knowledge.", "type": "quiz" }
+      ],
+      "reviews": []
+    },
+    {
+      "id": 107,
+      "title": "Leadership Skills for Young Women",
+      "category": "Leadership",
+      "instructor": "Dr. Amina Hassan",
+      "description": "Develop leadership skills for academic, professional, and community roles.",
+      "image": "https://placehold.co/600x400/8B5CF6/FFFFFF?text=Leadership+Skills",
+      "modules": [
+        { "id": 1, "title": "Leadership Mindset", "content": "Think like a leader.", "type": "video" },
+        { "id": 2, "title": "Decision Making", "content": "Make confident decisions.", "type": "reading" },
+        { "id": 3, "title": "Leadership Quiz", "content": "Evaluate leadership traits.", "type": "quiz" }
+      ],
+      "reviews": []
+    },
+    {
+      "id": 108,
+      "title": "Personal Branding for Women",
+      "category": "Career",
+      "instructor": "Melissa Tan",
+      "description": "Build a strong personal and professional identity.",
+      "image": "https://placehold.co/600x400/F97316/FFFFFF?text=Personal+Branding",
+      "modules": [
+        { "id": 1, "title": "Personal Brand Basics", "content": "What is personal branding?", "type": "video" },
+        { "id": 2, "title": "Online Presence", "content": "Optimizing your digital image.", "type": "reading" },
+        { "id": 3, "title": "Brand Quiz", "content": "Assess your brand strength.", "type": "quiz" }
+      ],
+      "reviews": []
+    },
+    {
+      "id": 109,
+      "title": "Mental Wellbeing & Self-Care for Women",
+      "category": "Wellbeing",
+      "instructor": "Dr. Noraini Aziz",
+      "description": "Learn strategies for emotional balance and stress management.",
+      "image": "https://placehold.co/600x400/EF4444/FFFFFF?text=Wellbeing",
+      "modules": [
+        { "id": 1, "title": "Understanding Stress", "content": "Identify stress triggers.", "type": "video" },
+        { "id": 2, "title": "Self-Care Practices", "content": "Daily self-care routines.", "type": "reading" },
+        { "id": 3, "title": "Wellbeing Quiz", "content": "Check mental wellness awareness.", "type": "quiz" }
+      ],
+      "reviews": []
+    },
+    {
+      "id": 110,
+      "title": "Marketing Basics for Women Entrepreneurs",
+      "category": "Marketing",
+      "instructor": "Hannah Lee",
+      "description": "Learn marketing fundamentals to grow women-owned businesses.",
+      "image": "https://placehold.co/600x400/0EA5E9/FFFFFF?text=Marketing",
+      "modules": [
+        { "id": 1, "title": "Marketing Foundations", "content": "Core marketing principles.", "type": "video" },
+        { "id": 2, "title": "Social Media Marketing", "content": "Using social platforms effectively.", "type": "reading" },
+        { "id": 3, "title": "Marketing Quiz", "content": "Test marketing basics.", "type": "quiz" }
+      ],
+      "reviews": []
+    },
+    {
+      "id": 111,
+      "title": "Negotiation Skills for Women",
+      "category": "Career",
+      "instructor": "Amirah Sofea",
+      "description": "Develop confidence in salary and opportunity negotiations.",
+      "image": "https://placehold.co/600x400/22C55E/FFFFFF?text=Negotiation",
+      "modules": [
+        { "id": 1, "title": "Negotiation Basics", "content": "Understanding negotiation strategies.", "type": "video" },
+        { "id": 2, "title": "Real-Life Scenarios", "content": "Negotiation examples.", "type": "reading" },
+        { "id": 3, "title": "Negotiation Quiz", "content": "Evaluate negotiation skills.", "type": "quiz" }
+      ],
+      "reviews": []
+    },
+    {
+      "id": 112,
+      "title": "Career Planning for Women",
+      "category": "Career",
+      "instructor": "Nurul Huda",
+      "description": "Plan long-term career growth with confidence and clarity.",
+      "image": "https://placehold.co/600x400/14B8A6/FFFFFF?text=Career+Planning",
+      "modules": [
+        { "id": 1, "title": "Career Mapping", "content": "Set clear career goals.", "type": "video" },
+        { "id": 2, "title": "Skill Gap Analysis", "content": "Identify skills to improve.", "type": "reading" },
+        { "id": 3, "title": "Career Quiz", "content": "Assess career readiness.", "type": "quiz" }
+      ],
+      "reviews": []
     }
   ],
   "enrollments": [],

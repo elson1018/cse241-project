@@ -19,9 +19,21 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const savedData = localStorage.getItem('appData');
     if (savedData) {
-      setAppData(JSON.parse(savedData));
+      const parsedData = JSON.parse(savedData);
+      // Logic to ensure new users in data.json are merged into existing localStorage data
+      const mergedUsers = [...parsedData.users];
+      data.users.forEach(jsonUser => {
+        if (!mergedUsers.some(u => u.username === jsonUser.username)) {
+          mergedUsers.push(jsonUser);
+        }
+      });
+
+      const updatedData = { ...parsedData, users: mergedUsers };
+      setAppData(updatedData);
+      localStorage.setItem('appData', JSON.stringify(updatedData));
     } else {
       setAppData(data);
+      localStorage.setItem('appData', JSON.stringify(data));
     }
 
     const savedUser = localStorage.getItem('currentUser');
@@ -35,12 +47,12 @@ export const AuthProvider = ({ children }) => {
     const user = appData.users.find(
       u => u.username === username && u.password === password
     );
-    
+
     if (user) {
       if (user.status === 'banned' || user.isBanned) {
         return { success: false, error: 'Your account has been banned. Please contact support.' };
       }
-      
+
       const userWithAvatar = {
         ...user,
         avatar: `https://placehold.co/100x100/4E56C0/FFFFFF?text=${user.name.charAt(0)}`
@@ -49,7 +61,7 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('currentUser', JSON.stringify(userWithAvatar));
       return { success: true, user: userWithAvatar };
     }
-    
+
     return { success: false, error: 'Invalid credentials' };
   };
 
@@ -60,22 +72,22 @@ export const AuthProvider = ({ children }) => {
       ...userData,
       avatar: `https://placehold.co/100x100/4E56C0/FFFFFF?text=${userData.name.charAt(0)}`
     };
-    
+
     // 1. Create the new list of users
     const updatedUsers = [...appData.users, newUser];
-    
+
     // 2. Create the new full data object
     const newAppData = { ...appData, users: updatedUsers };
 
     // 3. Update State
     setAppData(newAppData);
-    
+
     // 4. SAVE TO LOCAL STORAGE (This was missing!)
     localStorage.setItem('appData', JSON.stringify(newAppData));
-    
+
     setCurrentUser(newUser);
     localStorage.setItem('currentUser', JSON.stringify(newUser));
-    
+
     return { success: true, user: newUser };
   };
 
@@ -100,9 +112,9 @@ export const AuthProvider = ({ children }) => {
     const updatedUser = { ...currentUser, ...userData };
     setCurrentUser(updatedUser);
     localStorage.setItem('currentUser', JSON.stringify(updatedUser));
-    
+
     // Also update the user inside the main appData list
-    const updatedUsers = appData.users.map(u => 
+    const updatedUsers = appData.users.map(u =>
       u.id === currentUser.id ? { ...u, ...userData } : u
     );
     const newAppData = { ...appData, users: updatedUsers };
@@ -120,7 +132,7 @@ export const AuthProvider = ({ children }) => {
     setAppData,
     updateCurrentUser
   };
-    
+
   return (
     <AuthContext.Provider value={value}>
       {children}

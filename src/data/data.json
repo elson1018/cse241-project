@@ -7,7 +7,8 @@
       "password": "password123",
       "name": "Ivan Lim",
       "role": "admin",
-      "bio": "System Administrator"
+      "bio": "System Administrator",
+      "avatar": "https://placehold.co/100x100/333333/FFFFFF?text=Admin"
     },
     {
       "id": 2,
@@ -17,20 +18,107 @@
       "role": "mentee",
       "bio": "CS Student looking for AI guidance",
       "skills": ["Java", "React", "Python"],
-      "goals": "Become an AI Engineer"
+      "goals": "Become an AI Engineer",
+      "avatar": "https://placehold.co/100x100/4E56C0/FFFFFF?text=EO"
     },
     {
-      "id": 3,
-      "username": "alice",
+      "id": 50,
+      "username": "priya_d",
       "password": "password123",
-      "name": "Dr. Alice Wong",
-      "role": "mentor",
-      "industry": "Marketing",
-      "skills": ["Digital Strategy", "Branding"],
-      "experience": "10 Years at Top Firm",
-      "bio": "Helping women lead in business.",
-      "availability": ["Mon", "Wed"],
-      "isApproved": true
+      "name": "Priya Sharma",
+      "role": "mentee",
+      "bio": "Graphic Design student wanting to break into UI/UX.",
+      "skills": ["Photoshop", "Figma"],
+      "goals": "Build a portfolio.",
+      "avatar": "https://placehold.co/100x100/9b59b6/FFFFFF?text=PS"
+    },
+    {
+      "id": 51,
+      "username": "nina_r",
+      "password": "password123",
+      "name": "Nina Rozario",
+      "role": "mentee",
+      "bio": "Marketing executive looking to pivot into Data Science.",
+      "skills": ["Excel", "SQL"],
+      "goals": "Learn Python.",
+      "avatar": "https://placehold.co/100x100/34495e/FFFFFF?text=NR"
+    },
+    {
+      "id": 52,
+      "username": "aisha_k",
+      "password": "password123",
+      "name": "Aisha Khan",
+      "role": "mentee",
+      "bio": "Final year Law student interested in corporate law.",
+      "skills": ["Research", "Writing"],
+      "goals": "Find a legal mentor.",
+      "avatar": "https://placehold.co/100x100/e17055/FFFFFF?text=AK"
+    },
+    {
+      "id": 53,
+      "username": "bella_s",
+      "password": "password123",
+      "name": "Bella Swan",
+      "role": "mentee",
+      "bio": "Aspiring writer and editor.",
+      "skills": ["Creative Writing"],
+      "goals": "Publish a novel.",
+      "avatar": "https://placehold.co/100x100/fdcb6e/FFFFFF?text=BS"
+    },
+    {
+      "id": 54,
+      "username": "carmen_dev",
+      "password": "password123",
+      "name": "Carmen San",
+      "role": "mentee",
+      "bio": "Self-taught developer looking for first gig.",
+      "skills": ["HTML", "CSS", "JS"],
+      "goals": "Land a junior role.",
+      "avatar": "https://placehold.co/100x100/d63031/FFFFFF?text=CS"
+    },
+    {
+      "id": 55,
+      "username": "diana_p",
+      "password": "password123",
+      "name": "Diana Prince",
+      "role": "mentee",
+      "bio": "Project Manager looking to upskill.",
+      "skills": ["Agile", "Scrum"],
+      "goals": "Become a Product Owner.",
+      "avatar": "https://placehold.co/100x100/0984e3/FFFFFF?text=DP"
+    },
+    {
+      "id": 56,
+      "username": "elena_g",
+      "password": "password123",
+      "name": "Elena Gilbert",
+      "role": "mentee",
+      "bio": "Nursing student passionate about pediatrics.",
+      "skills": ["Patient Care", "First Aid"],
+      "goals": "Specialize in child care.",
+      "avatar": "https://placehold.co/100x100/00b894/FFFFFF?text=EG"
+    },
+    {
+      "id": 57,
+      "username": "fiona_g",
+      "password": "password123",
+      "name": "Fiona Gallagher",
+      "role": "mentee",
+      "bio": "Looking for financial stability and career advice.",
+      "skills": ["Resilience", "Budgeting"],
+      "goals": "Start a small business.",
+      "avatar": "https://placehold.co/100x100/636e72/FFFFFF?text=FG"
+    },
+    {
+      "id": 58,
+      "username": "gina_l",
+      "password": "password123",
+      "name": "Gina Linetti",
+      "role": "mentee",
+      "bio": "Social media enthusiast.",
+      "skills": ["Instagram", "TikTok Trends"],
+      "goals": "Become a content creator.",
+      "avatar": "https://placehold.co/100x100/a29bfe/FFFFFF?text=GL"
     },
     {
       "id": 4,
@@ -42,33 +130,221 @@
       "shopDescription": "Handmade with love.",
       "bio": "Artisan crafter.",
       "contactEmail": "jessica.crafts@example.com",
-      "contactPhone": "+60 12-345 6789"
+      "contactPhone": "+60 12-345 6789",
+      "avatar": "https://placehold.co/100x100/FFD93D/333333?text=JT"
     },
     {
-      "id": 5,
-      "username": "new_mentor",
+      "id": 60,
+      "username": "linda_bakes",
       "password": "password123",
-      "name": "Jane Tech",
+      "name": "Linda Lim",
+      "role": "entrepreneur",
+      "shopName": "Linda's Loaves",
+      "shopDescription": "Fresh organic sourdough.",
+      "bio": "Baking the world better.",
+      "contactEmail": "linda@bakery.com",
+      "contactPhone": "+60 17-999 8888",
+      "avatar": "https://placehold.co/100x100/e67e22/FFFFFF?text=LL"
+    },
+    {
+      "id": 61,
+      "username": "bloom_mei",
+      "password": "password123",
+      "name": "Mei Ling",
+      "role": "entrepreneur",
+      "shopName": "Bloom Floral",
+      "shopDescription": "Custom arrangements.",
+      "bio": "Floral artist.",
+      "contactEmail": "mei@bloom.com",
+      "contactPhone": "+60 11-2233 4455",
+      "avatar": "https://placehold.co/100x100/ff9ff3/FFFFFF?text=ML"
+    },
+    {
+      "id": 62,
+      "username": "eco_hannah",
+      "password": "password123",
+      "name": "Hannah Green",
+      "role": "entrepreneur",
+      "shopName": "EcoHome",
+      "shopDescription": "Sustainable home goods.",
+      "bio": "Zero-waste advocate.",
+      "contactEmail": "hannah@ecohome.com",
+      "contactPhone": "+60 19-887 7766",
+      "avatar": "https://placehold.co/100x100/27ae60/FFFFFF?text=HG"
+    },
+    {
+      "id": 3,
+      "username": "alice",
+      "password": "password123",
+      "name": "Dr. Alice Wong",
+      "role": "mentor",
+      "industry": "Marketing",
+      "skills": ["Strategy", "Branding"],
+      "bio": "Helping women lead in business.",
+      "isApproved": true,
+      "avatar": "https://placehold.co/100x100/FF6B6B/FFFFFF?text=AW"
+    },
+    {
+      "id": 10,
+      "username": "dr_sarah",
+      "password": "password123",
+      "name": "Dr. Sarah Lee",
+      "role": "mentor",
+      "industry": "Leadership",
+      "skills": ["Management", "Public Speaking"],
+      "bio": "Instructor for Leadership 101.",
+      "isApproved": true,
+      "avatar": "https://placehold.co/100x100/4E56C0/FFFFFF?text=SL"
+    },
+    {
+      "id": 11,
+      "username": "jane_doe",
+      "password": "password123",
+      "name": "Jane Doe",
       "role": "mentor",
       "industry": "Technology",
-      "isApproved": false,
-      "bio": "Waiting for admin approval."
+      "skills": ["Web Dev", "React", "HTML/CSS"],
+      "bio": "Web Development Instructor.",
+      "isApproved": true,
+      "avatar": "https://placehold.co/100x100/9B5DE0/FFFFFF?text=JD"
+    },
+    {
+      "id": 12,
+      "username": "nur_aisyah",
+      "password": "password123",
+      "name": "Nur Aisyah Karim",
+      "role": "mentor",
+      "industry": "Business",
+      "skills": ["Startups", "Business Models"],
+      "bio": "Teaching entrepreneurship fundamentals.",
+      "isApproved": true,
+      "avatar": "https://placehold.co/100x100/EC4899/FFFFFF?text=NA"
+    },
+    {
+      "id": 13,
+      "username": "jessica_lim",
+      "password": "password123",
+      "name": "Jessica Lim",
+      "role": "mentor",
+      "industry": "Technology",
+      "skills": ["Career Coaching", "Tech Skills"],
+      "bio": "Empowering women in tech.",
+      "isApproved": true,
+      "avatar": "https://placehold.co/100x100/6366F1/FFFFFF?text=JL"
+    },
+    {
+      "id": 14,
+      "username": "farah_nadia",
+      "password": "password123",
+      "name": "Farah Nadia",
+      "role": "mentor",
+      "industry": "Communication",
+      "skills": ["Public Speaking", "Confidence"],
+      "bio": "Helping you find your voice.",
+      "isApproved": true,
+      "avatar": "https://placehold.co/100x100/F59E0B/FFFFFF?text=FN"
+    },
+    {
+      "id": 15,
+      "username": "siti_nur",
+      "password": "password123",
+      "name": "Siti Nur Amalina",
+      "role": "mentor",
+      "industry": "Finance",
+      "skills": ["Budgeting", "Investing"],
+      "bio": "Financial literacy advocate.",
+      "isApproved": true,
+      "avatar": "https://placehold.co/100x100/10B981/FFFFFF?text=SA"
+    },
+    {
+      "id": 16,
+      "username": "dr_amina",
+      "password": "password123",
+      "name": "Dr. Amina Hassan",
+      "role": "mentor",
+      "industry": "Leadership",
+      "skills": ["Youth Leadership", "Decision Making"],
+      "bio": "Developing future leaders.",
+      "isApproved": true,
+      "avatar": "https://placehold.co/100x100/8B5CF6/FFFFFF?text=AH"
+    },
+    {
+      "id": 17,
+      "username": "melissa_tan",
+      "password": "password123",
+      "name": "Melissa Tan",
+      "role": "mentor",
+      "industry": "Career",
+      "skills": ["Branding", "LinkedIn"],
+      "bio": "Personal branding expert.",
+      "isApproved": true,
+      "avatar": "https://placehold.co/100x100/F97316/FFFFFF?text=MT"
+    },
+    {
+      "id": 18,
+      "username": "dr_noraini",
+      "password": "password123",
+      "name": "Dr. Noraini Aziz",
+      "role": "mentor",
+      "industry": "Wellbeing",
+      "skills": ["Mental Health", "Self-Care"],
+      "bio": "Wellness and stress management.",
+      "isApproved": true,
+      "avatar": "https://placehold.co/100x100/EF4444/FFFFFF?text=NA"
+    },
+    {
+      "id": 19,
+      "username": "hannah_lee",
+      "password": "password123",
+      "name": "Hannah Lee",
+      "role": "mentor",
+      "industry": "Marketing",
+      "skills": ["Social Media", "Digital Marketing"],
+      "bio": "Marketing basics for entrepreneurs.",
+      "isApproved": true,
+      "avatar": "https://placehold.co/100x100/0EA5E9/FFFFFF?text=HL"
+    },
+    {
+      "id": 20,
+      "username": "amirah_sofea",
+      "password": "password123",
+      "name": "Amirah Sofea",
+      "role": "mentor",
+      "industry": "Career",
+      "skills": ["Negotiation", "Sales"],
+      "bio": "Negotiation skills coach.",
+      "isApproved": true,
+      "avatar": "https://placehold.co/100x100/22C55E/FFFFFF?text=AS"
+    },
+    {
+      "id": 21,
+      "username": "nurul_huda",
+      "password": "password123",
+      "name": "Nurul Huda",
+      "role": "mentor",
+      "industry": "Career",
+      "skills": ["Planning", "Growth"],
+      "bio": "Career planning strategist.",
+      "isApproved": true,
+      "avatar": "https://placehold.co/100x100/14B8A6/FFFFFF?text=NH"
     }
   ],
-  "categories": ["Business", "Technology", "Leadership", "Marketing"],
+  "categories": ["Business", "Technology", "Leadership", "Marketing", "Finance", "Wellbeing", "Career", "Communication"],
+
   "courses": [
     {
       "id": 101,
       "title": "Leadership 101 for Women",
       "category": "Leadership",
       "instructor": "Dr. Sarah Lee",
+      "instructorId": 10,
       "description": "Master the art of leading teams.",
       "image": "https://placehold.co/600x400/4E56C0/FFFFFF?text=Leadership",
       "modules": [
-        { "id": 1, "title": "Introduction to Leadership", "content": "Learn the fundamentals of effective leadership and what makes a great leader.", "type": "video" },
-        { "id": 2, "title": "Communication Skills", "content": "Master the art of clear and effective communication with your team.", "type": "reading" },
-        { "id": 3, "title": "Team Building Strategies", "content": "Discover proven strategies for building and managing high-performing teams.", "type": "video" },
-        { "id": 4, "title": "Final Assessment", "content": "Test your understanding of leadership principles.", "type": "quiz" }
+        { "id": 1, "title": "Introduction to Leadership", "content": "Learn the fundamentals of effective leadership.", "type": "video" },
+        { "id": 2, "title": "Communication Skills", "content": "Master the art of clear and effective communication.", "type": "reading" },
+        { "id": 3, "title": "Team Building Strategies", "content": "Discover proven strategies.", "type": "video" },
+        { "id": 4, "title": "Final Assessment", "content": "Test your understanding.", "type": "quiz" }
       ],
       "reviews": [
         { "user": "Elson Ooi", "rating": 5, "comment": "Great course!" }
@@ -79,13 +355,14 @@
       "title": "Intro to Web Development",
       "category": "Technology",
       "instructor": "Jane Doe",
+      "instructorId": 11,
       "description": "HTML, CSS, and React basics.",
       "image": "https://placehold.co/600x400/9B5DE0/FFFFFF?text=Coding",
       "modules": [
-        { "id": 1, "title": "HTML Fundamentals", "content": "Learn the basics of HTML structure and semantic markup.", "type": "reading" },
-        { "id": 2, "title": "CSS Styling", "content": "Master CSS to create beautiful and responsive designs.", "type": "video" },
-        { "id": 3, "title": "React Basics", "content": "Introduction to React components and state management.", "type": "video" },
-        { "id": 4, "title": "Build Your First App", "content": "Create a complete web application using HTML, CSS, and React.", "type": "assignment" }
+        { "id": 1, "title": "HTML Fundamentals", "content": "Learn the basics of HTML structure.", "type": "reading" },
+        { "id": 2, "title": "CSS Styling", "content": "Master CSS to create beautiful designs.", "type": "video" },
+        { "id": 3, "title": "React Basics", "content": "Introduction to React components.", "type": "video" },
+        { "id": 4, "title": "Build Your First App", "content": "Create a complete web application.", "type": "assignment" }
       ],
       "reviews": []
     },
@@ -94,6 +371,7 @@
       "title": "Women Entrepreneurship Fundamentals",
       "category": "Business",
       "instructor": "Nur Aisyah Karim",
+      "instructorId": 12,
       "description": "Learn how to start, manage, and grow a women-led business from scratch.",
       "image": "https://placehold.co/600x400/EC4899/FFFFFF?text=Entrepreneurship",
       "modules": [
@@ -108,6 +386,7 @@
       "title": "Women in Technology: Getting Started",
       "category": "Technology",
       "instructor": "Jessica Lim",
+      "instructorId": 13,
       "description": "A beginner-friendly introduction to technology careers for women.",
       "image": "https://placehold.co/600x400/6366F1/FFFFFF?text=Women+in+Tech",
       "modules": [
@@ -122,6 +401,7 @@
       "title": "Public Speaking & Confidence for Women",
       "category": "Communication",
       "instructor": "Farah Nadia",
+      "instructorId": 14,
       "description": "Build confidence and master public speaking in professional settings.",
       "image": "https://placehold.co/600x400/F59E0B/FFFFFF?text=Public+Speaking",
       "modules": [
@@ -136,6 +416,7 @@
       "title": "Financial Literacy for Women",
       "category": "Finance",
       "instructor": "Siti Nur Amalina",
+      "instructorId": 15,
       "description": "Gain control over personal and business finances.",
       "image": "https://placehold.co/600x400/10B981/FFFFFF?text=Financial+Literacy",
       "modules": [
@@ -150,6 +431,7 @@
       "title": "Leadership Skills for Young Women",
       "category": "Leadership",
       "instructor": "Dr. Amina Hassan",
+      "instructorId": 16,
       "description": "Develop leadership skills for academic, professional, and community roles.",
       "image": "https://placehold.co/600x400/8B5CF6/FFFFFF?text=Leadership+Skills",
       "modules": [
@@ -164,6 +446,7 @@
       "title": "Personal Branding for Women",
       "category": "Career",
       "instructor": "Melissa Tan",
+      "instructorId": 17,
       "description": "Build a strong personal and professional identity.",
       "image": "https://placehold.co/600x400/F97316/FFFFFF?text=Personal+Branding",
       "modules": [
@@ -178,6 +461,7 @@
       "title": "Mental Wellbeing & Self-Care for Women",
       "category": "Wellbeing",
       "instructor": "Dr. Noraini Aziz",
+      "instructorId": 18,
       "description": "Learn strategies for emotional balance and stress management.",
       "image": "https://placehold.co/600x400/EF4444/FFFFFF?text=Wellbeing",
       "modules": [
@@ -192,6 +476,7 @@
       "title": "Marketing Basics for Women Entrepreneurs",
       "category": "Marketing",
       "instructor": "Hannah Lee",
+      "instructorId": 19,
       "description": "Learn marketing fundamentals to grow women-owned businesses.",
       "image": "https://placehold.co/600x400/0EA5E9/FFFFFF?text=Marketing",
       "modules": [
@@ -206,6 +491,7 @@
       "title": "Negotiation Skills for Women",
       "category": "Career",
       "instructor": "Amirah Sofea",
+      "instructorId": 20,
       "description": "Develop confidence in salary and opportunity negotiations.",
       "image": "https://placehold.co/600x400/22C55E/FFFFFF?text=Negotiation",
       "modules": [
@@ -220,6 +506,7 @@
       "title": "Career Planning for Women",
       "category": "Career",
       "instructor": "Nurul Huda",
+      "instructorId": 21,
       "description": "Plan long-term career growth with confidence and clarity.",
       "image": "https://placehold.co/600x400/14B8A6/FFFFFF?text=Career+Planning",
       "modules": [
@@ -239,14 +526,14 @@
     { "id": 2, "senderId": 3, "receiverId": 2, "text": "Glad to help, Elson!", "timestamp": "2025-12-01T10:05:00" }
   ],
   "meetings": [
-    { 
-      "id": 1, 
-      "mentorId": 3, 
-      "menteeId": 2, 
-      "date": "2025-12-10", 
-      "time": "14:00", 
-      "status": "scheduled", 
-      "link": "zoom.us/j/123" 
+    {
+      "id": 1,
+      "mentorId": 3,
+      "menteeId": 2,
+      "date": "2025-12-10",
+      "time": "14:00",
+      "status": "scheduled",
+      "link": "zoom.us/j/123"
     }
   ],
   "feedbacks": [],
@@ -350,15 +637,54 @@
       "reviews": [],
       "isBanned": false,
       "isSuspended": false
+    },
+    {
+      "id": 308,
+      "name": "Sourdough Starter Kit",
+      "category": "Food",
+      "price": 45.00,
+      "sellerId": 60,
+      "sellerName": "Linda's Loaves",
+      "image": "https://placehold.co/300x300/e67e22/FFFFFF?text=Starter",
+      "description": "Everything you need to bake fresh bread at home.",
+      "reviews": [],
+      "isBanned": false,
+      "isSuspended": false
+    },
+    {
+      "id": 309,
+      "name": "Weekly Flower Subscription",
+      "category": "Services",
+      "price": 120.00,
+      "sellerId": 61,
+      "sellerName": "Bloom Floral Studio",
+      "image": "https://placehold.co/300x300/ff9ff3/FFFFFF?text=Flowers",
+      "description": "Fresh seasonal blooms delivered to your door every Friday.",
+      "reviews": [],
+      "isBanned": false,
+      "isSuspended": false
+    },
+    {
+      "id": 310,
+      "name": "Zero Waste Kitchen Set",
+      "category": "Handmade Goods",
+      "price": 55.00,
+      "sellerId": 62,
+      "sellerName": "EcoHome Essentials",
+      "image": "https://placehold.co/300x300/27ae60/FFFFFF?text=EcoSet",
+      "description": "Bamboo brushes, beeswax wraps, and reusable produce bags.",
+      "reviews": [],
+      "isBanned": false,
+      "isSuspended": false
     }
   ],
   "orders": [
-    { 
-      "id": 501, 
-      "buyerId": 2, 
-      "productId": 301, 
-      "status": "shipped", 
-      "date": "2025-11-20" 
+    {
+      "id": 501,
+      "buyerId": 2,
+      "productId": 301,
+      "status": "shipped",
+      "date": "2025-11-20"
     }
   ],
   "forum_posts": [

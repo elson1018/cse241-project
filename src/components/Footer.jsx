@@ -146,10 +146,10 @@ const Footer = () => {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
                 {[
-                    { name: "Ivan Lim", role: "CEO & Founder", initials: "Ivan", color: "from-pink-500 to-red-500" },
-                    { name: "Elson Ooi", role: "Head of Tech", initials: "Elson", color: "from-blue-500 to-indigo-500" },
-                    { name: "Yap Han lim", role: "Community Lead", initials: "Yap", color: "from-purple-500 to-violet-500" },
-                    { name: "Lau Jun Hao", role: "Product Design", initials: "Lau", color: "from-green-400 to-emerald-600" }
+                    { name: "Ivan Lim", role: "Project Leader", initials: "Ivan", color: "from-pink-500 to-red-500" },
+                    { name: "Elson Ooi", role: "Software Engineer", initials: "Elson", color: "from-blue-500 to-indigo-500" },
+                    { name: "Yap Han lim", role: "Software Engineer", initials: "Yap", color: "from-purple-500 to-violet-500" },
+                    { name: "Lau Jun Hao", role: "Business Analyst", initials: "Lau", color: "from-green-400 to-emerald-600" }
                 ].map((member, i) => (
                     <div key={i} className="group flex flex-col items-center p-6 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 cursor-pointer">
                         <div className={`w-20 h-20 rounded-full bg-gradient-to-br ${member.color} flex items-center justify-center font-bold text-white text-2xl mb-4 shadow-lg`}>

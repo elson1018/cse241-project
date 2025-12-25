@@ -711,12 +711,51 @@
       "likes": 0,
       "isFlagged": true,
       "replies": []
+    },
+    {
+      "id": 403,
+      "title": "Transitioning from Marketing to Data Science",
+      "category": "Career",
+      "authorId": 51,
+      "authorName": "Nina Rozario",
+      "content": "I've been in marketing for 5 years and am now learning Python. Has anyone else made a similar pivot? Would love to hear your experiences and any tips on building a portfolio.",
+      "likes": 12,
+      "isFlagged": false,
+      "replies": [
+        { "id": 1, "authorName": "Jane Doe", "content": "That's a great move! Focus on SQL and Pandas first." }
+      ]
+    },
+    {
+      "id": 404,
+      "title": "Sourcing sustainable materials for crafts",
+      "category": "Business",
+      "authorId": 4,
+      "authorName": "Jessica Tan",
+      "content": "I'm having trouble finding reliable suppliers for eco-friendly fabrics in the local area. Does anyone have recommendations for vendors who support small businesses?",
+      "likes": 8,
+      "isFlagged": false,
+      "replies": []
+    },
+    {
+      "id": 405,
+      "title": "Managing burnout effectively",
+      "category": "Wellbeing",
+      "authorId": 18,
+      "authorName": "Dr. Noraini Aziz",
+      "content": "Remember that taking a break is productive. What are your go-to self-care routines during a stressful week? Let's share some positive strategies.",
+      "likes": 24,
+      "isFlagged": false,
+      "replies": [
+        { "id": 1, "authorName": "Elena Gilbert", "content": "I usually go for a long walk without my phone. It helps reset my mind." },
+        { "id": 2, "authorName": "Hannah Green", "content": "Gardening is my therapy!" }
+      ]
     }
   ],
   "notifications": [
     { "id": 1, "userId": 2, "text": "Dr. Alice accepted your mentorship request.", "read": false }
   ],
   "announcements": [
-    { "id": 1, "text": "Welcome to Wonder Women! Please read our guidelines.", "date": "2025-10-01" }
+    { "id": 1, "text": "Welcome to Wonder Women! Please read our guidelines.", "date": "2025-12-10" },
+    { "id": 2, "text": "Our new mentorship matching algorithm is now live! Update your profile to get better matches.", "date": "2025-12-05" }
   ]
 }

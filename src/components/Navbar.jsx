@@ -1,7 +1,7 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { GraduationCap, Users, ShoppingBag, MessageSquare, Bell, LogOut } from 'lucide-react';
-import { useState , useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Modal from './Modal';
 
 const Navbar = () => {
@@ -10,7 +10,28 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [showNotifications, setShowNotifications] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
-  
+
+  // Helper function to convert timestamps to relative time
+  const getRelativeTime = (timestamp) => {
+    if (!timestamp) return 'Recently';
+
+    const now = new Date();
+    const notificationTime = new Date(timestamp);
+    const diffInSeconds = Math.floor((now - notificationTime) / 1000);
+
+    if (diffInSeconds < 60) return 'Just now';
+    if (diffInSeconds < 3600) {
+      const minutes = Math.floor(diffInSeconds / 60);
+      return `${minutes} ${minutes === 1 ? 'minute' : 'minutes'} ago`;
+    }
+    if (diffInSeconds < 86400) {
+      const hours = Math.floor(diffInSeconds / 3600);
+      return `${hours} ${hours === 1 ? 'hour' : 'hours'} ago`;
+    }
+    const days = Math.floor(diffInSeconds / 86400);
+    return `${days} ${days === 1 ? 'day' : 'days'} ago`;
+  };
+
   const navItems = [
     { path: '/learning', label: 'SkillUp Learning', icon: GraduationCap },
     { path: '/mentorship', label: 'Mentorship Match', icon: Users },
@@ -42,6 +63,22 @@ const Navbar = () => {
     updateData('notifications', updatedNotifications);
   };
 
+  const handleNotificationClick = (notification) => {
+    // Mark as read
+    markNotificationAsRead(notification.id);
+    setShowNotifications(false);
+
+    // Navigate to the post if postId exists
+    if (notification.postId) {
+      navigate('/forum');
+      // Small delay to ensure navigation completes before scrolling
+      setTimeout(() => {
+        // The forum page will need to handle showing the specific post
+        // For now, just navigate to the forum
+      }, 100);
+    }
+  };
+
   if (!currentUser) {
     return null; // Don't show navbar if not logged in
   }
@@ -67,11 +104,10 @@ const Navbar = () => {
                 <Link
                   key={item.path}
                   to={item.path}
-                  className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${
-                    isActive
-                      ? 'bg-primary text-white shadow-sm'
-                      : 'text-gray-600 hover:bg-gray-100 hover:text-primary'
-                  }`}
+                  className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${isActive
+                    ? 'bg-primary text-white shadow-sm'
+                    : 'text-gray-600 hover:bg-gray-100 hover:text-primary'
+                    }`}
                 >
                   <Icon size={20} />
                   <span className="hidden md:inline">{item.label}</span>
@@ -112,12 +148,12 @@ const Navbar = () => {
                             <div
                               key={notification.id}
                               className="p-4 hover:bg-gray-50 cursor-pointer transition-colors"
-                              onClick={() => {
-                                markNotificationAsRead(notification.id);
-                                setShowNotifications(false);
-                              }}
+                              onClick={() => handleNotificationClick(notification)}
                             >
-                              <p className="text-sm text-gray-700">{notification.text}</p>
+                              <p className="text-sm text-gray-700 mb-1">{notification.text}</p>
+                              <p className="text-xs text-gray-500">
+                                {getRelativeTime(notification.timestamp)}
+                              </p>
                             </div>
                           ))}
                         </div>

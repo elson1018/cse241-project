@@ -26,7 +26,7 @@ const CommunityForum = () => {
   const [activeReplyPostId, setActiveReplyPostId] = useState(null);
   const [listReplyText, setListReplyText] = useState('');
 
-  const categories = ['All', 'Career Advice', 'Technology', 'General'];
+  const categories = ['All', 'Career Advice', 'Technology', 'General', 'Business'];
   const forumPosts = appData.forum_posts || [];
   const announcements = appData.announcements || [];
 
@@ -34,8 +34,8 @@ const CommunityForum = () => {
   const filteredPosts = forumPosts.filter(post => {
     const matchesCategory = selectedCategory === 'All' || post.category === selectedCategory;
     const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          post.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          (post.tags || []).some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+      post.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (post.tags || []).some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
     return matchesCategory && matchesSearch && !post.isFlagged;
   });
 
@@ -67,6 +67,22 @@ const CommunityForum = () => {
     const updatedPosts = forumPosts.map(post => {
       if (post.id === postId) {
         const isLiked = post.likedBy?.includes(currentUser.id);
+        const newIsLiked = !isLiked;
+
+        // Create notification for post author when someone likes their post
+        if (newIsLiked && post.authorId !== currentUser.id) {
+          const notification = {
+            id: Date.now(),
+            userId: post.authorId,
+            text: `${currentUser.name} liked your post: "${post.title}"`,
+            read: false,
+            timestamp: new Date().toISOString(),
+            postId: post.id,
+            type: 'like'
+          };
+          updateData('notifications', [...(appData.notifications || []), notification]);
+        }
+
         return {
           ...post,
           likes: isLiked ? (post.likes || 0) - 1 : (post.likes || 0) + 1,
@@ -79,7 +95,7 @@ const CommunityForum = () => {
     });
 
     updateData('forum_posts', updatedPosts);
-    
+
     // Update selectedPost if viewing it
     if (selectedPost && selectedPost.id === postId) {
       const updatedPost = updatedPosts.find(p => p.id === postId);
@@ -105,10 +121,10 @@ const CommunityForum = () => {
           parentReplyId: parentReplyId || null,
           replies: []
         };
-        
+
         // Ensure replies array exists
         const currentReplies = post.replies || [];
-        
+
         if (parentReplyId) {
           // This is a nested reply - find the parent reply and add to its replies
           const addNestedReply = (replies) => {
@@ -127,9 +143,9 @@ const CommunityForum = () => {
               return reply;
             });
           };
-          
+
           const updatedReplies = addNestedReply(currentReplies);
-          
+
           // Create notification for parent reply author
           const findParentReply = (replies) => {
             for (const reply of replies) {
@@ -141,18 +157,21 @@ const CommunityForum = () => {
             }
             return null;
           };
-          
+
           const parentReply = findParentReply(currentReplies);
           if (parentReply && parentReply.authorId !== currentUser.id) {
             const notification = {
               id: Date.now(),
               userId: parentReply.authorId,
               text: `${currentUser.name} replied to your comment`,
-              read: false
+              read: false,
+              timestamp: new Date().toISOString(),
+              postId: post.id,
+              type: 'comment_reply'
             };
             updateData('notifications', [...(appData.notifications || []), notification]);
           }
-          
+
           return {
             ...post,
             replies: updatedReplies
@@ -165,11 +184,14 @@ const CommunityForum = () => {
               id: Date.now(),
               userId: post.authorId,
               text: `${currentUser.name} replied to your post: "${post.title}"`,
-              read: false
+              read: false,
+              timestamp: new Date().toISOString(),
+              postId: post.id,
+              type: 'reply'
             };
             updateData('notifications', [...(appData.notifications || []), notification]);
           }
-          
+
           return {
             ...post,
             replies: [...currentReplies, newReply]
@@ -180,24 +202,16 @@ const CommunityForum = () => {
     });
 
     updateData('forum_posts', updatedPosts);
-    
+
     // Update selectedPost with the latest data
     const updatedPost = updatedPosts.find(p => p.id === postId);
     if (updatedPost) {
       setSelectedPost(updatedPost);
     }
-    
+
     setReplyText('');
     setReplyingToReplyId(null);
     setToast({ message: 'Reply posted!', type: 'success' });
-    
-    // Force re-render by updating forumPosts reference
-    setTimeout(() => {
-      const refreshedPost = appData.forum_posts?.find(p => p.id === postId);
-      if (refreshedPost) {
-        setSelectedPost(refreshedPost);
-      }
-    }, 100);
   };
 
   const handleListReplySubmit = (postId) => {
@@ -208,8 +222,8 @@ const CommunityForum = () => {
     // Submit as a top-level reply for this post
     handleReply(postId, null, listReplyText);
     setListReplyText('');
-    // Keep the section open so the user sees their new reply
-    setActiveReplyPostId(postId);
+    // Close the reply section after successful submission
+    setActiveReplyPostId(null);
   };
 
   const togglePostReplySection = (postId) => {
@@ -259,7 +273,7 @@ const CommunityForum = () => {
     };
 
     updateData('announcements', [...announcements, announcement]);
-    
+
     // Create notification for all users
     const allUsers = appData.users || [];
     const notifications = allUsers.map(user => ({
@@ -269,7 +283,7 @@ const CommunityForum = () => {
       read: false
     }));
     updateData('notifications', [...(appData.notifications || []), ...notifications]);
-    
+
     setShowAnnouncementModal(false);
     setAnnouncementText('');
     setToast({ message: 'Announcement broadcasted!', type: 'success' });
@@ -353,11 +367,10 @@ const CommunityForum = () => {
             <button
               key={category}
               onClick={() => setSelectedCategory(category)}
-              className={`px-4 py-2 rounded-lg font-semibold transition-all ${
-                selectedCategory === category
+              className={`px-4 py-2 rounded-lg font-semibold transition-all ${selectedCategory === category
                   ? 'bg-primary text-white shadow-lg scale-105'
                   : 'bg-primary/5 text-text-main border border-transparent hover:bg-primary hover:text-white'
-              }`}
+                }`}
             >
               {category}
             </button>
@@ -386,9 +399,8 @@ const CommunityForum = () => {
                           e.stopPropagation();
                           handleLike(post.id);
                         }}
-                        className={`flex items-center gap-1 text-sm transition-colors ${
-                          isLiked(post) ? 'text-red-500' : 'text-gray-500 hover:text-red-500'
-                        }`}
+                        className={`flex items-center gap-1 text-sm transition-colors ${isLiked(post) ? 'text-red-500' : 'text-gray-500 hover:text-red-500'
+                          }`}
                       >
                         <Heart size={16} className={isLiked(post) ? 'fill-current' : ''} />
                         {post.likes || 0}
@@ -494,9 +506,8 @@ const CommunityForum = () => {
                   </span>
                   <button
                     onClick={() => handleLike(selectedPost.id)}
-                    className={`flex items-center gap-1 ml-auto transition-colors ${
-                      isLiked(selectedPost) ? 'text-red-500' : 'text-gray-500 hover:text-red-500'
-                    }`}
+                    className={`flex items-center gap-1 ml-auto transition-colors ${isLiked(selectedPost) ? 'text-red-500' : 'text-gray-500 hover:text-red-500'
+                      }`}
                   >
                     <Heart size={20} className={isLiked(selectedPost) ? 'fill-current' : ''} />
                     {selectedPost.likes || 0}
@@ -524,7 +535,7 @@ const CommunityForum = () => {
                 <h3 className="text-lg font-bold text-primary mb-4">
                   Replies ({(selectedPost.replies || []).length})
                 </h3>
-                
+
                 {/* Recursive Reply Component */}
                 {(() => {
                   const renderReply = (reply, depth = 0) => {
@@ -652,6 +663,7 @@ const CommunityForum = () => {
               <option value="Career Advice">Career Advice</option>
               <option value="Technology">Technology</option>
               <option value="General">General</option>
+              <option value="Business">Business</option>
             </select>
           </div>
           <div>

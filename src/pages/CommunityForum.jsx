@@ -25,10 +25,15 @@ const CommunityForum = () => {
   const [replyingToReplyId, setReplyingToReplyId] = useState(null);
   const [activeReplyPostId, setActiveReplyPostId] = useState(null);
   const [listReplyText, setListReplyText] = useState('');
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [reportReason, setReportReason] = useState('');
+  const [postToReport, setPostToReport] = useState(null);
+  const [showFlaggedPosts, setShowFlaggedPosts] = useState(false);
 
   const categories = ['All', 'Career Advice', 'Technology', 'General', 'Business'];
   const forumPosts = appData.forum_posts || [];
   const announcements = appData.announcements || [];
+  const flaggedPosts = forumPosts.filter(post => post.isFlagged);
 
   // Filter posts
   const filteredPosts = forumPosts.filter(post => {
@@ -236,12 +241,32 @@ const CommunityForum = () => {
     }
   };
 
-  const handleReportPost = (postId) => {
+  const handleReportPost = () => {
+    if (!reportReason.trim()) {
+      setToast({ message: 'Please provide a reason for reporting', type: 'error' });
+      return;
+    }
+
     const updatedPosts = forumPosts.map(post =>
-      post.id === postId ? { ...post, isFlagged: true } : post
+      post.id === postToReport ? {
+        ...post,
+        isFlagged: true,
+        reportReason: reportReason.trim(),
+        reportedBy: currentUser.id,
+        reportedAt: new Date().toISOString()
+      } : post
     );
     updateData('forum_posts', updatedPosts);
+
+    setShowReportModal(false);
+    setReportReason('');
+    setPostToReport(null);
     setToast({ message: 'Post reported. Admin will review it.', type: 'info' });
+  };
+
+  const openReportModal = (postId) => {
+    setPostToReport(postId);
+    setShowReportModal(true);
   };
 
   const handleDeletePost = (postId) => {
@@ -361,23 +386,111 @@ const CommunityForum = () => {
           />
         </div>
 
+        {/* Admin Flagged Posts Toggle */}
+        <RoleWrapper allowedRoles={['admin']}>
+          {flaggedPosts.length > 0 && (
+            <div className="mb-6">
+              <Button
+                variant={showFlaggedPosts ? 'danger' : 'outline'}
+                onClick={() => setShowFlaggedPosts(!showFlaggedPosts)}
+              >
+                <Flag size={18} className="inline mr-2" />
+                {showFlaggedPosts ? 'Hide' : 'View'} Reported Posts ({flaggedPosts.length})
+              </Button>
+            </div>
+          )}
+        </RoleWrapper>
+
         {/* Category Filters */}
-        <div className="mb-6 flex gap-4 flex-wrap">
-          {categories.map((category) => (
-            <button
-              key={category}
-              onClick={() => setSelectedCategory(category)}
-              className={`px-4 py-2 rounded-lg font-semibold transition-all ${selectedCategory === category
+        {!showFlaggedPosts && (
+          <div className="mb-6 flex gap-4 flex-wrap">
+            {categories.map((category) => (
+              <button
+                key={category}
+                onClick={() => setSelectedCategory(category)}
+                className={`px-4 py-2 rounded-lg font-semibold transition-all ${selectedCategory === category
                   ? 'bg-primary text-white shadow-lg scale-105'
                   : 'bg-primary/5 text-text-main border border-transparent hover:bg-primary hover:text-white'
-                }`}
-            >
-              {category}
-            </button>
-          ))}
-        </div>
+                  }`}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+        )}
 
-        {!selectedPost ? (
+        {showFlaggedPosts ? (
+          <RoleWrapper allowedRoles={['admin']}>
+            <div className="space-y-4">
+              <h2 className="text-2xl font-bold text-primary mb-4">
+                Reported Posts - Admin Review
+              </h2>
+              {flaggedPosts.length === 0 ? (
+                <Card>
+                  <p className="text-center text-gray-500 py-8">No reported posts at the moment.</p>
+                </Card>
+              ) : (
+                flaggedPosts.map((post) => (
+                  <Card key={post.id} className="border-2 border-red-300">
+                    <div className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-2">
+                          <Flag className="text-red-500" size={20} />
+                          <h3 className="text-xl font-bold text-primary">{post.title}</h3>
+                          <span className="px-2 py-1 bg-accent bg-opacity-30 text-secondary rounded text-xs font-semibold">
+                            {post.category}
+                          </span>
+                        </div>
+                        <p className="text-sm text-gray-600 mb-2">
+                          by {post.authorName} • {post.timestamp}
+                        </p>
+                        <p className="text-text-main mb-3">{post.content}</p>
+
+                        {/* Report Details */}
+                        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mt-3">
+                          <p className="font-semibold text-red-800 mb-2">
+                            Report Information:
+                          </p>
+                          <div className="space-y-1 text-sm">
+                            <p className="text-red-700">
+                              <strong>Reason:</strong> {post.reportReason || 'No reason provided'}
+                            </p>
+                            {post.reportedAt && (
+                              <p className="text-red-600">
+                                <strong>Reported At:</strong> {new Date(post.reportedAt).toLocaleString()}
+                              </p>
+                            )}
+                            {post.reportedBy && (
+                              <p className="text-red-600">
+                                <strong>Reported By User ID:</strong> {post.reportedBy}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex gap-2 ml-4">
+                        <Button
+                          variant="success"
+                          onClick={() => handleUnflagPost(post.id)}
+                          className="text-xs"
+                        >
+                          <Ban size={14} className="inline mr-1" />
+                          Dismiss Report
+                        </Button>
+                        <Button
+                          variant="danger"
+                          onClick={() => handleDeletePost(post.id)}
+                        >
+                          <Trash2 size={18} />
+                        </Button>
+                      </div>
+                    </div>
+                  </Card>
+                ))
+              )}
+            </div>
+          </RoleWrapper>
+        ) : !selectedPost ? (
           <div className="space-y-4">
             {filteredPosts.map((post) => (
               <Card key={post.id} className="cursor-pointer hover:shadow-xl transition-shadow" onClick={() => handleViewPost(post)}>
@@ -469,7 +582,7 @@ const CommunityForum = () => {
                   <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
                     <Button
                       variant="outline"
-                      onClick={() => handleReportPost(post.id)}
+                      onClick={() => openReportModal(post.id)}
                       className="text-xs"
                     >
                       <Flag size={14} className="inline mr-1" />
@@ -721,6 +834,61 @@ const CommunityForum = () => {
               onClick={() => {
                 setShowAnnouncementModal(false);
                 setAnnouncementText('');
+              }}
+              className="flex-1"
+            >
+              Cancel
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Report Post Modal */}
+      <Modal
+        isOpen={showReportModal}
+        onClose={() => {
+          setShowReportModal(false);
+          setReportReason('');
+          setPostToReport(null);
+        }}
+        title="Report Post"
+      >
+        <div className="space-y-4">
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+            <p className="text-sm text-yellow-800">
+              <strong>Are you sure you want to report this post?</strong>
+            </p>
+            <p className="text-xs text-yellow-700 mt-1">
+              Reporting will flag this post for admin review. Please provide a reason below.
+            </p>
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-text-main mb-2">
+              Reason for Report <span className="text-red-500">*</span>
+            </label>
+            <textarea
+              value={reportReason}
+              onChange={(e) => setReportReason(e.target.value)}
+              rows={4}
+              className="w-full px-4 py-2 border border-accent rounded-lg focus:outline-none focus:ring-2 focus:ring-primary resize-none"
+              placeholder="Please explain why you are reporting this post (e.g., spam, inappropriate content, harassment, etc.)"
+            />
+          </div>
+          <div className="flex gap-3 pt-4">
+            <Button
+              variant="danger"
+              onClick={handleReportPost}
+              className="flex-1"
+            >
+              <Flag size={18} className="inline mr-2" />
+              Confirm Report
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowReportModal(false);
+                setReportReason('');
+                setPostToReport(null);
               }}
               className="flex-1"
             >

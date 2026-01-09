@@ -29,6 +29,8 @@ const CommunityForum = () => {
   const [reportReason, setReportReason] = useState('');
   const [postToReport, setPostToReport] = useState(null);
   const [showFlaggedPosts, setShowFlaggedPosts] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [postToDelete, setPostToDelete] = useState(null);
 
   const categories = ['All', 'Career Advice', 'Technology', 'General', 'Business'];
   const forumPosts = appData.forum_posts || [];
@@ -270,11 +272,20 @@ const CommunityForum = () => {
   };
 
   const handleDeletePost = (postId) => {
-    updateData('forum_posts', forumPosts.filter(post => post.id !== postId));
-    if (selectedPost?.id === postId) {
-      setSelectedPost(null);
+    setPostToDelete(postId);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = () => {
+    if (postToDelete) {
+      updateData('forum_posts', forumPosts.filter(post => post.id !== postToDelete));
+      if (selectedPost?.id === postToDelete) {
+        setSelectedPost(null);
+      }
+      setToast({ message: 'Post deleted', type: 'success' });
+      setShowDeleteModal(false);
+      setPostToDelete(null);
     }
-    setToast({ message: 'Post deleted', type: 'success' });
   };
 
   const handleUnflagPost = (postId) => {
@@ -800,6 +811,41 @@ const CommunityForum = () => {
               className="flex-1"
             >
               Cancel
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Delete Confirmation Modal */}
+      <Modal
+        isOpen={showDeleteModal}
+        onClose={() => {
+          setShowDeleteModal(false);
+          setPostToDelete(null);
+        }}
+        title="Confirm Deletion"
+      >
+        <div className="space-y-4">
+          <p className="text-text-main">
+            Are you sure you want to delete this post? This action cannot be undone.
+          </p>
+          <div className="flex gap-3 pt-4">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowDeleteModal(false);
+                setPostToDelete(null);
+              }}
+              className="flex-1"
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="danger"
+              onClick={confirmDelete}
+              className="flex-1"
+            >
+              Delete
             </Button>
           </div>
         </div>
